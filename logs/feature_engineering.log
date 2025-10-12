@@ -1,0 +1,7 @@
+2025-10-12 14:23:01,245 - feature_engineering - INFO - Loading data from ../data/preprocessed_data.csv
+2025-10-12 14:23:01,248 - feature_engineering - ERROR - An error occurred: [Errno 2] No such file or directory: '../data/preprocessed_data.csv'
+2025-10-12 14:25:25,113 - feature_engineering - INFO - Loading data from ../data/preprocessed/global_sustainable_energy_preprocessed.csv
+2025-10-12 14:25:25,246 - feature_engineering - INFO - Applying Box-Cox transformation
+2025-10-12 14:25:25,449 - feature_engineering - INFO - Saved Box-Cox lambdas to ../boxcox_lambdas.json
+2025-10-12 14:25:25,450 - feature_engineering - INFO - Saving feature engineered data to ../data/featured_data.csv
+2025-10-12 14:25:25,908 - feature_engineering - INFO - Feature engineering complete.
