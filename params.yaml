@@ -1,0 +1,15 @@
+feature_engineering:
+  input_path: data/preprocessed/global_sustainable_energy_preprocessed.csv
+  output_path: data/featured_data.csv
+  boxcox_lambda_path: boxcox_lambdas.json
+  cols_to_transform:
+    - 'Electricity from fossil fuels (TWh)'
+    - 'Electricity from nuclear (TWh)'
+    - 'Electricity from renewables (TWh)'
+    - 'Financial flows to developing countries (US $)'
+    - 'Primary energy consumption per capita (kWh/person)'
+    - 'Renewable-electricity-generating-capacity-per-capita'
+    - 'Renewables (% equivalent primary energy)'
+    - 'Value_co2_emissions_kt_by_country'
+    - 'gdp_growth'
+    - 'gdp_per_capita'
