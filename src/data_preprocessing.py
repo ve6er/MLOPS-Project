@@ -65,30 +65,7 @@ def group_values(df: pd.DataFrame):
     return data_filled
 
 
-# reducing outliers by transforming the data to a more gaussian-like distribution
-def filter_outliers(df: pd.DataFrame):
-    arr_col = [
-        'Electricity from fossil fuels (TWh)',
-        'Electricity from nuclear (TWh)',
-        'Electricity from renewables (TWh)',
-        'Financial flows to developing countries (US $)',
-        'Primary energy consumption per capita (kWh/person)',
-        'Renewable-electricity-generating-capacity-per-capita',
-        'Renewables (% equivalent primary energy)',
-        'Value_co2_emissions_kt_by_country',
-        'gdp_growth',
-        'gdp_per_capita'
-    ]
 
-    boxcox_lambdas = {}
-
-    for col in arr_col:
-        mask = df[col] > 0
-        transformed_values, fitted_lambda = boxcox(df.loc[mask, col])
-        df.loc[mask, col] = transformed_values
-        boxcox_lambdas[col] = fitted_lambda
-
-    return df
 
 #encode the data for the column entities, creating columns of 0/1 type for each unique value in the original columns
 def encode_data(df: pd.DataFrame):
@@ -130,4 +107,5 @@ def main():
 
 
 if __name__ == "__main__":
+
     main()
