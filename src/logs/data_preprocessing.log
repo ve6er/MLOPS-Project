@@ -1,0 +1,14 @@
+2025-10-09 04:44:57,666 - data_preprocessing - ERROR - File Not Found: [Errno 2] No such file or directory: '..\\data/global-data-on-sustainable-energy.csv'
+2025-10-09 04:45:33,119 - data_preprocessing - ERROR - File Not Found: [Errno 2] No such file or directory: './data/global-data-on-sustainable-energy.csv'
+2025-10-09 04:45:54,086 - data_preprocessing - ERROR - File Not Found: [Errno 2] No such file or directory: '..\\data/raw\\global-data-on-sustainable-energy.csv'
+2025-10-09 04:46:05,370 - data_preprocessing - ERROR - File Not Found: [Errno 2] No such file or directory: '..\\data/raw\\global-data-on-sustainable-energy.csv'
+2025-10-09 04:46:19,088 - data_preprocessing - DEBUG - raw data is loaded
+2025-10-09 04:46:19,095 - data_preprocessing - DEBUG - dropping columns and modifying data types successful
+2025-10-09 04:46:19,694 - data_preprocessing - DEBUG - successfully completed preprocessing
+2025-10-09 04:46:19,694 - data_preprocessing - ERROR - Failed to complete preprocesing: mkdir() got an unexpected keyword argument 'exist_ok'
+2025-10-09 04:46:55,071 - data_preprocessing - DEBUG - raw data is loaded
+2025-10-09 04:46:55,074 - data_preprocessing - DEBUG - dropping columns and modifying data types successful
+2025-10-09 04:46:55,644 - data_preprocessing - DEBUG - successfully completed preprocessing
+2025-10-09 07:03:32,954 - data_preprocessing - DEBUG - raw data is loaded
+2025-10-09 07:03:32,964 - data_preprocessing - DEBUG - dropping columns and modifying data types successful
+2025-10-09 07:03:33,871 - data_preprocessing - DEBUG - successfully completed preprocessing
