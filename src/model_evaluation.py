@@ -132,10 +132,9 @@ def main():
             model = load_model('./model/model.pkl')
             
             # Load test data
-            test_data = load_data('../data/processed/test_processed.csv')
+            test_data = load_data('data/preprocessed/global_sustainable_energy_preprocessed.csv')
             
             # Separate features and target
-            # Assuming the target variable is in the last column
             X_test = test_data.iloc[:, :-1].values
             y_test = test_data.iloc[:, -1].values
             
