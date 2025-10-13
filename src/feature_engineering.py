@@ -5,9 +5,10 @@ import logging
 import json
 import yaml
 import argparse
+from sklearn.model_selection import train_test_split
 
 # --- Logging setup ---
-log_dir = '../logs' # Correct path to save logs
+log_dir = '../logs'
 os.makedirs(log_dir, exist_ok=True)
 logger = logging.getLogger('feature_engineering')
 logger.setLevel('DEBUG')
@@ -20,20 +21,26 @@ logger.addHandler(file_handler)
 
 def feature_engineering(config_path):
     try:
-        # Go up one directory to find the config file
+        # Load parameters from the YAML file
         with open(os.path.join("..", config_path)) as f:
             config = yaml.safe_load(f)
 
-        params = config['feature_engineering']
-        # Adjust paths to be relative to the main project folder
-        input_path = os.path.join("..", params['input_path'])
-        output_path = os.path.join("..", params['output_path'])
-        lambda_path = os.path.join("..", params['boxcox_lambda_path'])
-        arr_col = params['cols_to_transform']
+        fe_params = config['feature_engineering']
+        split_params = config['data_split']
+
+        input_path = os.path.join("..", fe_params['input_path'])
+        lambda_path = os.path.join("..", fe_params['boxcox_lambda_path'])
+        arr_col = fe_params['cols_to_transform']
+        train_path = os.path.join("..", split_params['train_path'])
+        test_path = os.path.join("..", split_params['test_path'])
+        test_size = split_params['test_size']
+        random_state = split_params['random_state']
+        target_col = split_params['target_col']
 
         logger.info(f"Loading data from {input_path}")
         df = pd.read_csv(input_path)
 
+        # 1. Applying Box-Cox Transformation
         logger.info("Applying Box-Cox transformation")
         boxcox_lambdas = {}
         for col in arr_col:
@@ -47,9 +54,25 @@ def feature_engineering(config_path):
             json.dump(boxcox_lambdas, f)
         logger.info(f"Saved Box-Cox lambdas to {lambda_path}")
 
-        logger.info(f"Saving feature engineered data to {output_path}")
-        df.to_csv(output_path, index=False)
-        logger.info("Feature engineering complete.")
+        # 2. Splitting the data into training and testing sets
+        logger.info(f"Splitting data with test_size={test_size}")
+        train_df, test_df = train_test_split(
+            df,
+            test_size=test_size,
+            random_state=random_state
+        )
+
+        # Create directories for train/test data if they don't exist
+        os.makedirs(os.path.dirname(train_path), exist_ok=True)
+        os.makedirs(os.path.dirname(test_path), exist_ok=True)
+
+        logger.info(f"Saving training data to {train_path}")
+        train_df.to_csv(train_path, index=False)
+
+        logger.info(f"Saving testing data to {test_path}")
+        test_df.to_csv(test_path, index=False)
+
+        logger.info("Feature engineering and data splitting complete.")
 
     except Exception as e:
         logger.error(f"An error occurred: {e}")
