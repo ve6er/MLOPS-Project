@@ -1,0 +1,14 @@
+artifact_path: file:///mnt/c/Users/Lenovo/Desktop/Colleg/Sem%207/MLOPS-Project/mlruns/0/models/m-ea139097e4304f74ac5505dc874b9f4f/artifacts
+flavors:
+  sklearn:
+    code: null
+    pickled_model: model.pkl
+    serialization_format: cloudpickle
+    sklearn_version: 1.7.1
+mlflow_version: 3.2.0
+model_id: m-ea139097e4304f74ac5505dc874b9f4f
+model_size_bytes: 4
+model_uuid: m-ea139097e4304f74ac5505dc874b9f4f
+prompts: null
+run_id: be6ee785b66740df8e34a786c2aa3906
+utc_time_created: '2025-10-13 05:54:18.933632'

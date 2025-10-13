@@ -1,0 +1,14 @@
+artifact_uri: file:///mnt/c/Users/Lenovo/Desktop/Colleg/Sem%207/MLOPS-Project/mlruns/0/4bc430d968894c3db65b39feccf1115e/artifacts
+end_time: 1760335529369
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 4bc430d968894c3db65b39feccf1115e
+run_name: train
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1760335523935
+status: 3
+tags: []
+user_id: veer

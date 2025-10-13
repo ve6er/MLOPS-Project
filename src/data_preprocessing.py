@@ -75,7 +75,7 @@ def encode_data(df: pd.DataFrame):
 
 def main():
     try:
-        data_path = "../data"
+        data_path = "./data"
         df = pd.read_csv(os.path.join(data_path,"raw/global-data-on-sustainable-energy.csv"))
         logger.debug("raw data is loaded")
 
@@ -86,14 +86,13 @@ def main():
 
         #removing null values and removing outliers
         df = group_values(df)
-        df = filter_outliers(df)
         df = encode_data(df)
         logger.debug("successfully completed preprocessing")
 
         #saving the preprocessed data
         preprocessed_data_path = os.path.join(data_path, "preprocessed")
         os.makedirs(preprocessed_data_path, exist_ok=True)
-        df.to_csv(os.path.join(preprocessed_data_path,"global_sustainable_energy_preprocessed.csv"),index = False)
+        df.to_csv(os.path.join(preprocessed_data_path,"global_sustainable_energy_preprocessed2.csv"),index = False)
     except FileNotFoundError as e:
         logger.error('File Not Found: %s',e)
         raise

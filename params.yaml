@@ -13,3 +13,7 @@ feature_engineering:
     - 'Value_co2_emissions_kt_by_country'
     - 'gdp_growth'
     - 'gdp_per_capita'
+
+model_building:
+  alphas: [0.01, 0.1, 1.0, 10.0, 100.0]
+  store_cv_values: True
