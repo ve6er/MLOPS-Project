@@ -17,11 +17,12 @@ feature_engineering:
   data_split:
   test_size: 0.2
   random_state: 42
-  train_path: data/train/train.csv
-  test_path: data/test/test.csv
+  train_path: data/preprocessed/train.csv
+  test_path: data/preprocessed/test.csv
   target_col: 'Renewables (% equivalent primary energy)'
 
 model_building:
   alphas: [0.01, 0.1, 1.0, 10.0, 100.0]
 
   store_cv_values: True
+
