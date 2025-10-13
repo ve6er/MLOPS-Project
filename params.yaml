@@ -13,7 +13,15 @@ feature_engineering:
     - 'Value_co2_emissions_kt_by_country'
     - 'gdp_growth'
     - 'gdp_per_capita'
+  
+  data_split:
+  test_size: 0.2
+  random_state: 42
+  train_path: data/train/train.csv
+  test_path: data/test/test.csv
+  target_col: 'Renewables (% equivalent primary energy)'
 
 model_building:
   alphas: [0.01, 0.1, 1.0, 10.0, 100.0]
+
   store_cv_values: True
