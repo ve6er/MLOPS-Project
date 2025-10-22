@@ -4,3 +4,5 @@ scikit-learn
 dvc
 pyyaml
 dvclive
+flask
+joblib
