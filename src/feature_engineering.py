@@ -22,7 +22,7 @@ logger.addHandler(file_handler)
 def feature_engineering(config_path):
     try:
         # Load parameters from the YAML file
-        with open(os.path.join("..", config_path)) as f:
+        with open(os.path.join(".", config_path)) as f:
             config = yaml.safe_load(f)
 
         fe_params = config['feature_engineering']

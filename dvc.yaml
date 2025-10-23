@@ -1,7 +1,27 @@
-params:
-- dvclive/params.yaml
-metrics:
-- dvclive/metrics.json
-plots:
-- dvclive/plots/metrics:
-    x: step
+stages:
+  preprocess:
+    cmd: python src/data_preprocessing.py > logs/data_preprocessing.log 2>&1
+    deps:
+      - data/raw
+      - src/data_preprocessing.py
+      - params.yaml
+    outs:
+      - data/preprocessed
+
+  feature_engineering:
+    cmd: python src/feature_engineering.py > logs/feature_engineering.log 2>&1
+    deps:
+      - data/preprocessed
+      - src/feature_engineering.py
+      - params.yaml
+    outs:
+      - data/features
+
+  model_building:
+    cmd: python src/model_building.py > logs/model_building.log 2>&1
+    deps:
+      - data/preprocessed/global_sustainable_energy_preprocessed.csv
+      - src/model_building.py
+      - params.yaml
+    outs:
+      - model/model.pkl
