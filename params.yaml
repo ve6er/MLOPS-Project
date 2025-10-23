@@ -19,14 +19,12 @@ feature_engineering:
     - 'gdp_growth'
     - 'gdp_per_capita'
 
-  data_split:
-    train_path: data/preprocessed/train.csv
-    test_path: data/preprocessed/test.csv
-
-    test_size: 0.2
-    random_state: 42
-
-    target_col: 'Renewables (% equivalent primary energy)'
+data_split:
+  train_path: data/preprocessed/train.csv
+  test_path: data/preprocessed/test.csv
+  test_size: 0.2
+  random_state: 42
+  target_col: 'Renewables (% equivalent primary energy)'
 
 model_building:
   alphas: [0.01, 0.1, 1.0, 10.0, 100.0]
