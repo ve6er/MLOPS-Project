@@ -25,3 +25,14 @@ stages:
       - params.yaml
     outs:
       - model/model.pkl
+
+
+  model_evaluation:
+    cmd: python src/model_evaluation.py > logs/model_evaluation.log 2>&1
+    deps:
+      - model/model.pkl
+      - data/preprocessed/global_sustainable_energy_preprocessed.csv
+      - src/model_evaluation.py
+      - params.yaml
+    outs:
+      - reports/metrics.json
