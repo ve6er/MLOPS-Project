@@ -30,7 +30,7 @@ logger.addHandler(file_handler)
 
 #cleans columns names and drops irrelevant columns
 def drop_cols(df: pd.DataFrame):  
-    df.columns = df.columns.str.replace('\\n', '', regex=True).str.strip()
+    #df.columns = df.columns.str.replace('\\n', '\n', regex=True).str.strip()
     return df.drop(['Land Area(Km2)', 'Latitude', 'Longitude'],axis=1)
 
 #converts density and year columns to numeric data type

@@ -1,8 +1,9 @@
 pandas
 scipy
-scikit-learn
+scikit-learn==1.7.1
 dvc
 pyyaml
 dvclive
 flask
-joblib
+gunicorn 
+
