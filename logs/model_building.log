@@ -42,3 +42,11 @@
 2025-10-13 06:08:11,370 - model_building - DEBUG - Model training starred with 3649 samples
 2025-10-13 06:08:11,791 - model_building - DEBUG - Training Completed
 2025-10-13 06:08:11,800 - model_building - DEBUG - Model saved to model/model.pkl
+2025-10-13 14:07:09,278 - model_building - DEBUG - path: /Users/samriddhikumari/Desktop/College/Sem7/mlops/project/MLOPS-Project/mlruns
+2025-10-13 14:07:09,369 - model_building - DEBUG - Parameters retrieved from <_io.TextIOWrapper name='params.yaml' mode='r' encoding='UTF-8'>
+2025-10-13 14:07:09,400 - model_building - DEBUG - Data loaded from data/preprocessed/global_sustainable_energy_preprocessed.csv
+2025-10-13 14:07:09,408 - model_building - DEBUG - Initializing model parameters from params
+2025-10-13 14:07:09,408 - model_building - DEBUG - Model training starred with 3649 samples
+2025-10-13 14:07:09,697 - model_building - ERROR - Unexpected error encountered _BaseRidgeCV.__init__() got an unexpected keyword argument 'store_cv_results'
+2025-10-13 14:07:09,698 - model_building - DEBUG - Model saved to model/model.pkl
+2025-10-13 14:07:11,434 - model_building - ERROR - Failed to build model [Errno 30] Read-only file system: '/mnt'

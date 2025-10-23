@@ -1,7 +1,12 @@
+data_preprocessing:
+  input_path: data/raw/global_sustainable_energy_preprocessed.csv
+  output_path: data/preprocessed/global_sustainable_energy_preprocessed.csv
+
 feature_engineering:
   input_path: data/preprocessed/global_sustainable_energy_preprocessed.csv
-  output_path: data/featured_data.csv
-  boxcox_lambda_path: boxcox_lambdas.json
+  output_path: data/features/featured_data.csv
+  boxcox_lambda_path: data/features/boxcox_lambdas.json
+  
   cols_to_transform:
     - 'Electricity from fossil fuels (TWh)'
     - 'Electricity from nuclear (TWh)'
@@ -13,18 +18,17 @@ feature_engineering:
     - 'Value_co2_emissions_kt_by_country'
     - 'gdp_growth'
     - 'gdp_per_capita'
-  
+
   data_split:
     train_path: data/preprocessed/train.csv
     test_path: data/preprocessed/test.csv
-  test_size: 0.2
-  random_state: 42
-  train_path: data/preprocessed/train.csv
-  test_path: data/preprocessed/test.csv
-  target_col: 'Renewables (% equivalent primary energy)'
+
+    test_size: 0.2
+    random_state: 42
+
+    target_col: 'Renewables (% equivalent primary energy)'
 
 model_building:
   alphas: [0.01, 0.1, 1.0, 10.0, 100.0]
-
-  store_cv_values: True
-
+  store_cv_values: true
+  model_path: model/model.pkl
