@@ -2,37 +2,28 @@ stages:
   preprocess:
     cmd: python src/data_preprocessing.py > logs/data_preprocessing.log 2>&1
     deps:
-      - data/raw
+      - data/raw/global-data-on-sustainable-energy.csv
       - src/data_preprocessing.py
       - params.yaml
     outs:
-      - data/preprocessed
+      - data/preprocessed/global_sustainable_energy_preprocessed2.csv
 
   feature_engineering:
     cmd: python src/feature_engineering.py > logs/feature_engineering.log 2>&1
     deps:
-      - data/preprocessed
+      - data/preprocessed/global_sustainable_energy_preprocessed2.csv
       - src/feature_engineering.py
       - params.yaml
     outs:
-      - data/features
+      - data/preprocessed/train.csv
+      - data/preprocessed/test.csv
 
   model_building:
     cmd: python src/model_building.py > logs/model_building.log 2>&1
     deps:
-      - data/preprocessed/global_sustainable_energy_preprocessed.csv
+      - data/preprocessed/train.csv
+      - data/preprocessed/test.csv
       - src/model_building.py
       - params.yaml
     outs:
       - model/model.pkl
-
-
-  model_evaluation:
-    cmd: python src/model_evaluation.py > logs/model_evaluation.log 2>&1
-    deps:
-      - model/model.pkl
-      - data/preprocessed/global_sustainable_energy_preprocessed.csv
-      - src/model_evaluation.py
-      - params.yaml
-    outs:
-      - reports/metrics.json

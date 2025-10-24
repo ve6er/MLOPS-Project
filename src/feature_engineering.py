@@ -28,11 +28,11 @@ def feature_engineering(config_path):
         fe_params = config['feature_engineering']
         split_params = config['data_split']
 
-        input_path = os.path.join("..", fe_params['input_path'])
-        lambda_path = os.path.join("..", fe_params['boxcox_lambda_path'])
+        input_path = os.path.join(fe_params['input_path'])
+        lambda_path = os.path.join(".", fe_params['boxcox_lambda_path'])
         arr_col = fe_params['cols_to_transform']
-        train_path = os.path.join("..", split_params['train_path'])
-        test_path = os.path.join("..", split_params['test_path'])
+        train_path = os.path.join(".", split_params['train_path'])
+        test_path = os.path.join(".", split_params['test_path'])
         test_size = split_params['test_size']
         random_state = split_params['random_state']
         target_col = split_params['target_col']

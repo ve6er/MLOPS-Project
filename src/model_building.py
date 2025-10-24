@@ -123,7 +123,7 @@ logger.debug(f"path: {os.path.abspath('mlruns')}")
 try:
         with mlflow.start_run(run_name='train'):
             params = load_params('params.yaml')['model_building']
-            train_data = load_csv('data/preprocessed/global_sustainable_energy_preprocessed.csv')
+            train_data = load_csv('data/preprocessed/global_sustainable_energy_preprocessed2.csv')
             X_train = train_data.iloc[:,:-1].values
             y_train = train_data.iloc[:,-1].values
 

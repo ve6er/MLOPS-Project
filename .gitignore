@@ -4,4 +4,3 @@ pycache
 imputation_values.json
 ohe_columns.json
 boxcox_lambda.json
-model

@@ -1,52 +1,10 @@
-2025-10-13 05:53:41,035 - model_building - DEBUG - Parameters retrieved from <_io.TextIOWrapper name='params.yaml' mode='r' encoding='UTF-8'>
-2025-10-13 05:53:41,185 - model_building - DEBUG - Data loaded from data/preprocessed/global_sustainable_energy_preprocessed.csv
-2025-10-13 05:53:41,207 - model_building - DEBUG - Initializing model parameters from params
-2025-10-13 05:53:41,207 - model_building - DEBUG - Model training starred with 3649 samples
-2025-10-13 05:53:41,369 - model_building - ERROR - Unexpected error encountered _BaseRidgeCV.__init__() got an unexpected keyword argument 'store_cv_values'. Did you mean 'store_cv_results'?
-2025-10-13 05:53:41,415 - model_building - ERROR - Failed to build model module 'os' has no attribute 'mkdirs'
-2025-10-13 05:54:17,899 - model_building - DEBUG - Parameters retrieved from <_io.TextIOWrapper name='params.yaml' mode='r' encoding='UTF-8'>
-2025-10-13 05:54:18,024 - model_building - DEBUG - Data loaded from data/preprocessed/global_sustainable_energy_preprocessed.csv
-2025-10-13 05:54:18,041 - model_building - DEBUG - Initializing model parameters from params
-2025-10-13 05:54:18,042 - model_building - DEBUG - Model training starred with 3649 samples
-2025-10-13 05:54:18,255 - model_building - ERROR - Unexpected error encountered _BaseRidgeCV.__init__() got an unexpected keyword argument 'store_cv_values'. Did you mean 'store_cv_results'?
-2025-10-13 05:54:18,291 - model_building - DEBUG - Model saved to model/model.pkl
-2025-10-13 05:58:03,199 - model_building - DEBUG - Parameters retrieved from <_io.TextIOWrapper name='params.yaml' mode='r' encoding='UTF-8'>
-2025-10-13 05:58:03,352 - model_building - DEBUG - Data loaded from data/preprocessed/global_sustainable_energy_preprocessed.csv
-2025-10-13 05:58:03,373 - model_building - DEBUG - Initializing model parameters from params
-2025-10-13 05:58:03,374 - model_building - DEBUG - Model training starred with 3649 samples
-2025-10-13 05:58:04,081 - model_building - DEBUG - Training Completed
-2025-10-13 05:58:04,120 - model_building - DEBUG - Model saved to model/model.pkl
-2025-10-13 05:59:59,135 - model_building - DEBUG - Parameters retrieved from <_io.TextIOWrapper name='params.yaml' mode='r' encoding='UTF-8'>
-2025-10-13 05:59:59,263 - model_building - DEBUG - Data loaded from data/preprocessed/global_sustainable_energy_preprocessed.csv
-2025-10-13 05:59:59,281 - model_building - DEBUG - Initializing model parameters from params
-2025-10-13 05:59:59,281 - model_building - DEBUG - Model training starred with 3649 samples
-2025-10-13 05:59:59,760 - model_building - DEBUG - Training Completed
-2025-10-13 05:59:59,771 - model_building - DEBUG - Model saved to model/model.pkl
-2025-10-13 06:05:24,384 - model_building - DEBUG - Parameters retrieved from <_io.TextIOWrapper name='params.yaml' mode='r' encoding='UTF-8'>
-2025-10-13 06:05:24,520 - model_building - DEBUG - Data loaded from data/preprocessed/global_sustainable_energy_preprocessed.csv
-2025-10-13 06:05:24,540 - model_building - DEBUG - Initializing model parameters from params
-2025-10-13 06:05:24,540 - model_building - DEBUG - Model training starred with 3649 samples
-2025-10-13 06:05:24,986 - model_building - DEBUG - Training Completed
-2025-10-13 06:05:25,003 - model_building - DEBUG - Model saved to model/model.pkl
-2025-10-13 06:07:32,668 - model_building - DEBUG - path: /mnt/c/Users/Lenovo/Desktop/Colleg/Sem 7/MLOPS-Project/mlruns
-2025-10-13 06:07:33,200 - model_building - DEBUG - Parameters retrieved from <_io.TextIOWrapper name='params.yaml' mode='r' encoding='UTF-8'>
-2025-10-13 06:07:33,342 - model_building - DEBUG - Data loaded from data/preprocessed/global_sustainable_energy_preprocessed.csv
-2025-10-13 06:07:33,372 - model_building - DEBUG - Initializing model parameters from params
-2025-10-13 06:07:33,373 - model_building - DEBUG - Model training starred with 3649 samples
-2025-10-13 06:07:33,934 - model_building - DEBUG - Training Completed
-2025-10-13 06:07:33,943 - model_building - DEBUG - Model saved to model/model.pkl
-2025-10-13 06:08:10,592 - model_building - DEBUG - path: /mnt/c/Users/Lenovo/Desktop/Colleg/Sem 7/MLOPS-Project/mlruns
-2025-10-13 06:08:11,237 - model_building - DEBUG - Parameters retrieved from <_io.TextIOWrapper name='params.yaml' mode='r' encoding='UTF-8'>
-2025-10-13 06:08:11,351 - model_building - DEBUG - Data loaded from data/preprocessed/global_sustainable_energy_preprocessed.csv
-2025-10-13 06:08:11,369 - model_building - DEBUG - Initializing model parameters from params
-2025-10-13 06:08:11,370 - model_building - DEBUG - Model training starred with 3649 samples
-2025-10-13 06:08:11,791 - model_building - DEBUG - Training Completed
-2025-10-13 06:08:11,800 - model_building - DEBUG - Model saved to model/model.pkl
-2025-10-13 14:07:09,278 - model_building - DEBUG - path: /Users/samriddhikumari/Desktop/College/Sem7/mlops/project/MLOPS-Project/mlruns
-2025-10-13 14:07:09,369 - model_building - DEBUG - Parameters retrieved from <_io.TextIOWrapper name='params.yaml' mode='r' encoding='UTF-8'>
-2025-10-13 14:07:09,400 - model_building - DEBUG - Data loaded from data/preprocessed/global_sustainable_energy_preprocessed.csv
-2025-10-13 14:07:09,408 - model_building - DEBUG - Initializing model parameters from params
-2025-10-13 14:07:09,408 - model_building - DEBUG - Model training starred with 3649 samples
-2025-10-13 14:07:09,697 - model_building - ERROR - Unexpected error encountered _BaseRidgeCV.__init__() got an unexpected keyword argument 'store_cv_results'
-2025-10-13 14:07:09,698 - model_building - DEBUG - Model saved to model/model.pkl
-2025-10-13 14:07:11,434 - model_building - ERROR - Failed to build model [Errno 30] Read-only file system: '/mnt'
+2025-10-23 19:33:30,277 - model_building - DEBUG - path: /mnt/c/Users/Lenovo/Desktop/Colleg/Sem 7/MLOPS-Project/mlruns
+2025-10-23 19:33:30,884 - model_building - DEBUG - Parameters retrieved from <_io.TextIOWrapper name='params.yaml' mode='r' encoding='UTF-8'>
+2025-10-23 19:33:30,983 - model_building - DEBUG - Data loaded from data/preprocessed/global_sustainable_energy_preprocessed2.csv
+2025-10-23 19:33:30,996 - model_building - DEBUG - Initializing model parameters from params
+2025-10-23 19:33:30,997 - model_building - DEBUG - Model training starred with 3649 samples
+2025-10-23 19:33:31,238 - model_building - DEBUG - Training Completed
+2025-10-23 19:33:31,249 - model_building - DEBUG - Model saved to model/model.pkl
+2025/10/23 19:33:31 WARNING mlflow.models.model: `artifact_path` is deprecated. Please use `name` instead.
+[31m2025/10/23 19:33:34 WARNING mlflow.models.model: Model logged without a signature and input example. Please set `input_example` parameter when logging the model to auto infer the model signature.[0m
+Optimal lambda: 0.01

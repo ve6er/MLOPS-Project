@@ -1,0 +1,84 @@
+schema: '2.0'
+stages:
+  preprocess:
+    cmd: python src/data_preprocessing.py > logs/data_preprocessing.log 2>&1
+    deps:
+    - path: data/raw/global-data-on-sustainable-energy.csv
+      hash: md5
+      md5: fc81369ef48da00ac0332e789ec9b158
+      size: 513817
+      isexec: true
+    - path: params.yaml
+      hash: md5
+      md5: 6312cb5ed23914bb07ee987554902a3f
+      size: 1135
+      isexec: true
+    - path: src/data_preprocessing.py
+      hash: md5
+      md5: fa2df388a39d8549dc7cb1ca3ee79274
+      size: 4243
+      isexec: true
+    outs:
+    - path: data/preprocessed/global_sustainable_energy_preprocessed2.csv
+      hash: md5
+      md5: d2df45a956a4dd59caada39aed02ab0c
+      size: 4263522
+      isexec: true
+  feature_engineering:
+    cmd: python src/feature_engineering.py > logs/feature_engineering.log 2>&1
+    deps:
+    - path: data/preprocessed/global_sustainable_energy_preprocessed2.csv
+      hash: md5
+      md5: d2df45a956a4dd59caada39aed02ab0c
+      size: 4263522
+      isexec: true
+    - path: params.yaml
+      hash: md5
+      md5: 6312cb5ed23914bb07ee987554902a3f
+      size: 1135
+      isexec: true
+    - path: src/feature_engineering.py
+      hash: md5
+      md5: 05699bae961a91b9045f12bb430a810a
+      size: 3071
+      isexec: true
+    outs:
+    - path: data/preprocessed/test.csv
+      hash: md5
+      md5: 06f4c9f2c511534ae39e88975c8463a0
+      size: 905672
+      isexec: true
+    - path: data/preprocessed/train.csv
+      hash: md5
+      md5: 45743a93debf294d0877ef3334e423ea
+      size: 3614927
+      isexec: true
+  model_building:
+    cmd: python src/model_building.py > logs/model_building.log 2>&1
+    deps:
+    - path: data/preprocessed/test.csv
+      hash: md5
+      md5: 06f4c9f2c511534ae39e88975c8463a0
+      size: 905672
+      isexec: true
+    - path: data/preprocessed/train.csv
+      hash: md5
+      md5: 45743a93debf294d0877ef3334e423ea
+      size: 3614927
+      isexec: true
+    - path: params.yaml
+      hash: md5
+      md5: 6312cb5ed23914bb07ee987554902a3f
+      size: 1135
+      isexec: true
+    - path: src/model_building.py
+      hash: md5
+      md5: 978860d6a7cacf2db28c47f995fbad06
+      size: 4801
+      isexec: true
+    outs:
+    - path: model/model.pkl
+      hash: md5
+      md5: e3dae18b1ef72c06ff5322f4384d9b35
+      size: 1963
+      isexec: true

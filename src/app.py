@@ -126,3 +126,5 @@ def predict():
         print(traceback.format_exc())
         return jsonify({"error": f"Failed to make prediction. {e}"}), 400
 
+if __name__ == "__main__":
+    app.run(port=5000)
