@@ -1,0 +1,64 @@
+name: Retrain Model on Data Update
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'data/**'
+      - 'params.yaml'
+      - 'src/**'
+      - 'dvc.yaml'
+      - '*.dvc'
+
+jobs:
+  retrain:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Required for DVC
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install dvc[s3]
+
+      - name: Pull latest data from DVC remote
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: |
+          dvc pull -r s3remote
+
+      - name: Reproduce DVC pipeline (retrain)
+        run: |
+          dvc repro
+
+      - name: Push new model and artifacts to DVC remote
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: |
+          dvc push -r s3remote
+
+      - name: Commit updated DVC metadata
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "actions@github.com"
+          git add dvc.lock
+          git commit -m "Auto retrain model due to data change" || echo "No changes to commit"
+          git push origin master
+
+      - name: Trigger deployment workflow
+        uses: peter-evans/workflow-dispatch@v2
+        with:
+          workflow: "ci-cd.yaml"
+          ref: master
