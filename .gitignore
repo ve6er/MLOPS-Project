@@ -18,3 +18,5 @@ boxcox_lambda.json
 *.pyc
 __pycache__/
 .dvc/cache/
+/models_exp
+/reports_exp

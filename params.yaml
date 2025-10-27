@@ -1,12 +1,13 @@
 data_preprocessing:
-  input_path: data/raw/global_sustainable_energy_preprocessed.csv
-  output_path: data/preprocessed/global_sustainable_energy_preprocessed.csv
+  input_path: data/raw/global-data-on-sustainable-energy.csv
+  output_path: data/preprocessed/global_sustainable_energy_preprocessed2.csv
+  imputation_path: artifacts/imputation_values.json
+  ohe_columns_path: artifacts/ohe_columns.json
 
 feature_engineering:
   input_path: data/preprocessed/global_sustainable_energy_preprocessed2.csv
   output_path: data/features/featured_data.csv
-  boxcox_lambda_path: boxcox_lambdas.json
-  
+  boxcox_lambda_path: artifacts/boxcox_lambdas.json
   cols_to_transform:
     - 'Electricity from fossil fuels (TWh)'
     - 'Electricity from nuclear (TWh)'
