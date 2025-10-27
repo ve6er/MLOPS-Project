@@ -1,9 +1,10 @@
 name: CI/CD Pipeline for DVC Project
 
 on:
-  push:
-    branches:
-      - master
+  repository_dispatch:
+    types: [model-retrained]
+  
+  workflow_dispatch:
 
 jobs:
   build-and-deploy:
