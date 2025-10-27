@@ -3,3 +3,18 @@ pycache
 imputation_values.json
 ohe_columns.json
 boxcox_lambda.json
+
+/data/preprocessed/
+/data/processed/
+/artifacts/
+/models_exp/
+/reports_exp/
+/model/
+/reports/
+
+# Other files to ignore
+/logs/
+/mlruns/
+*.pyc
+__pycache__/
+.dvc/cache/
