@@ -67,3 +67,17 @@ ypes successful
 2025-10-27 19:19:10,850 - data_preprocessing - DEBUG - successfully completed preprocessing
 2025-10-27 19:19:11,054 - data_preprocessing - DEBUG - Imputation values saved to artifacts/imputation_values.json
 2025-10-27 19:19:11,057 - data_preprocessing - DEBUG - OHE columns saved to artifacts/ohe_columns.json
+2025-10-27 19:32:40,672 - data_preprocessing - DEBUG - raw data is loaded
+2025-10-27 19:32:40,673 - data_preprocessing - DEBUG - Dropping irrelevant columns
+2025-10-27 19:32:40,676 - data_preprocessing - DEBUG - Starting type conversion
+2025-10-27 19:32:40,680 - data_preprocessing - DEBUG - Type conversion finished
+2025-10-27 19:32:40,681 - data_preprocessing - DEBUG - dropping columns and modifying data types successful
+2025-10-27 19:32:40,681 - data_preprocessing - DEBUG - Starting grouping and imputation
+2025-10-27 19:32:41,104 - data_preprocessing - DEBUG - Imputation finished
+2025-10-27 19:32:41,105 - data_preprocessing - DEBUG - Starting one-hot encoding
+2025-10-27 19:32:41,109 - data_preprocessing - DEBUG - Removed target 'Renewables (% equivalent primary energy)' from OHE column list.
+2025-10-27 19:32:41,110 - data_preprocessing - DEBUG - Dropped and removed 'Renewable energy share in the total final energy consumption (%)' from OHE column list.
+2025-10-27 19:32:41,110 - data_preprocessing - DEBUG - Encoding finished
+2025-10-27 19:32:41,111 - data_preprocessing - DEBUG - successfully completed preprocessing
+2025-10-27 19:32:41,319 - data_preprocessing - DEBUG - Imputation values saved to artifacts/imputation_values.json
+2025-10-27 19:32:41,322 - data_preprocessing - DEBUG - OHE columns saved to artifacts/ohe_columns.json

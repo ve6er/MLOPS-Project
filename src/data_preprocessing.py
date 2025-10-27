@@ -104,13 +104,25 @@ def encode_data(df: pd.DataFrame):
     # Get all column names *after* encoding
     ohe_columns = data_encoded.columns.tolist()
     
-    # Drop the target column (as seen in original script)
-    target_col = 'Renewable energy share in the total final energy consumption (%)'
+    # Target column from your 'feature_engineering.py'
+    target_col = 'Renewables (% equivalent primary energy)' 
+    
+    # Target column from your original script
+    other_target_col = 'Renewable energy share in the total final energy consumption (%)'
+
     if target_col in data_encoded.columns:
-        data_encoded.drop([target_col], axis=1, inplace=True)
-        # Remove target from ohe_columns list
+        # We don't drop it from the *data* here, we let feature_engineering.py handle that
+        # But we MUST remove it from the *list of features* for the API
         if target_col in ohe_columns:
             ohe_columns.remove(target_col)
+            logger.debug(f"Removed target '{target_col}' from OHE column list.")
+            
+    if other_target_col in data_encoded.columns:
+        # This one *was* being dropped from the data, so we continue that
+        data_encoded.drop([other_target_col], axis=1, inplace=True)
+        if other_target_col in ohe_columns:
+            ohe_columns.remove(other_target_col)
+            logger.debug(f"Dropped and removed '{other_target_col}' from OHE column list.")
             
     logger.debug("Encoding finished")
     return data_encoded, ohe_columns
