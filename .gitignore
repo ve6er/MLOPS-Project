@@ -20,3 +20,6 @@ __pycache__/
 .dvc/cache/
 /models_exp
 /reports_exp
+
+.github\workflows\ci-cd.yaml
+.github\workflows\retrain.yaml

@@ -1,0 +1,70 @@
+name: MLOps CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - master  # Triggers on push to the main branch
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  run-pipeline:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11' # Make sure this matches your environment
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }} # !! IMPORTANT: Change this to your S3 bucket's region
+
+      - name: Setup DVC
+        uses: iterative/setup-dvc@v1
+
+      - name: Pull DVC Cache
+        run: |
+          # Pull only the raw data to start the pipeline
+          # This avoids errors if other stages haven't been run yet
+          dvc pull data/raw/global-data-on-sustainable-energy.csv.dvc -r mlops_remote
+          
+      - name: Reproduce the full pipeline
+        run: |
+          # This runs all stages: preprocess, feature_engineering, train, and select_best
+          dvc repro
+          
+      - name: Show DVC experiments
+        run: |
+          dvc exp show
+          
+      - name: Push new artifacts to S3
+        run: |
+          # Push all new data, artifacts, and models to S3
+          dvc push -r mlops_remote
+          
+      - name: Commit DVC lock files
+        run: |
+          # Configure Git
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          
+          # Add the updated lock file
+          git add dvc.lock
+          
+          # Commit only if there are changes
+          git commit -m "ci: [Auto] Update dvc.lock with new model/data" || echo "No changes to commit"
+          
+          # Push the commit back to your repo
+          git push
