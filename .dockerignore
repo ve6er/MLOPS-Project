@@ -1,6 +1,29 @@
-venv
-pycache
-logs
-data/
+# Git and DVC
 .git/
-.gitignore
+.dvc/
+.dvcignore
+dvc.lock
+dvc.yaml
+.github/
+
+# Data
+data/
+
+# Code, logs, and experiments
+src/
+logs/
+mlruns/
+reports/
+reports_exp/
+models_exp/
+
+# Python cache
+*.pyc
+__pycache__/
+
+# Other
+Dockerfile
+.dockerignore
+README.md
+
+venv
