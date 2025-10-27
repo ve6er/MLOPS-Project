@@ -5,7 +5,7 @@ stages:
     deps:
     - path: data/raw/global-data-on-sustainable-energy.csv
       hash: md5
-      md5: fc81369ef48da00ac0332e789ec9b158
+      md5: db5ea6ee3f6863fef4d774b54886ac7f
       size: 513817
       isexec: true
     - path: params.yaml
@@ -21,7 +21,7 @@ stages:
     outs:
     - path: data/preprocessed/global_sustainable_energy_preprocessed2.csv
       hash: md5
-      md5: d2df45a956a4dd59caada39aed02ab0c
+      md5: 9281ad7cfc4b813d9e061f042fe46490
       size: 4263522
       isexec: true
   feature_engineering:
@@ -29,7 +29,7 @@ stages:
     deps:
     - path: data/preprocessed/global_sustainable_energy_preprocessed2.csv
       hash: md5
-      md5: d2df45a956a4dd59caada39aed02ab0c
+      md5: 9281ad7cfc4b813d9e061f042fe46490
       size: 4263522
       isexec: true
     - path: params.yaml
@@ -45,26 +45,26 @@ stages:
     outs:
     - path: data/preprocessed/test.csv
       hash: md5
-      md5: 06f4c9f2c511534ae39e88975c8463a0
-      size: 905672
+      md5: f5d2bfcb449e5c0cda5fe924acceeee9
+      size: 905661
       isexec: true
     - path: data/preprocessed/train.csv
       hash: md5
-      md5: 45743a93debf294d0877ef3334e423ea
-      size: 3614927
+      md5: c584eaa8f7b1bb49933b724ff9ad0a0d
+      size: 3614930
       isexec: true
   model_building:
     cmd: python src/model_building.py > logs/model_building.log 2>&1
     deps:
     - path: data/preprocessed/test.csv
       hash: md5
-      md5: 06f4c9f2c511534ae39e88975c8463a0
-      size: 905672
+      md5: f5d2bfcb449e5c0cda5fe924acceeee9
+      size: 905661
       isexec: true
     - path: data/preprocessed/train.csv
       hash: md5
-      md5: 45743a93debf294d0877ef3334e423ea
-      size: 3614927
+      md5: c584eaa8f7b1bb49933b724ff9ad0a0d
+      size: 3614930
       isexec: true
     - path: params.yaml
       hash: md5
@@ -79,6 +79,6 @@ stages:
     outs:
     - path: model/model.pkl
       hash: md5
-      md5: e3dae18b1ef72c06ff5322f4384d9b35
+      md5: b78cf8e1b0839f78b41bc0c6eb712ec0
       size: 1963
       isexec: true

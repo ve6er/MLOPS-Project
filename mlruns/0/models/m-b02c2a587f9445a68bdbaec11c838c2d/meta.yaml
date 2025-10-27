@@ -1,0 +1,10 @@
+artifact_location: file:///mnt/c/Users/Lenovo/Desktop/Colleg/Sem%207/MLOPS-Project/mlruns/0/models/m-b02c2a587f9445a68bdbaec11c838c2d/artifacts
+creation_timestamp: 1761577140928
+experiment_id: '0'
+last_updated_timestamp: 1761577143951
+model_id: m-b02c2a587f9445a68bdbaec11c838c2d
+model_type: null
+name: 397a0e5420de4a7ba8988e9230b1ec94
+source_run_id: 397a0e5420de4a7ba8988e9230b1ec94
+status: 2
+status_message: null

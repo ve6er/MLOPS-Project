@@ -1,0 +1,6 @@
+outs:
+- md5: db5ea6ee3f6863fef4d774b54886ac7f
+  size: 513817
+  isexec: true
+  hash: md5
+  path: global-data-on-sustainable-energy.csv

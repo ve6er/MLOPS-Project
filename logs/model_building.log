@@ -1,10 +1,10 @@
-2025-10-23 19:33:30,277 - model_building - DEBUG - path: /mnt/c/Users/Lenovo/Desktop/Colleg/Sem 7/MLOPS-Project/mlruns
-2025-10-23 19:33:30,884 - model_building - DEBUG - Parameters retrieved from <_io.TextIOWrapper name='params.yaml' mode='r' encoding='UTF-8'>
-2025-10-23 19:33:30,983 - model_building - DEBUG - Data loaded from data/preprocessed/global_sustainable_energy_preprocessed2.csv
-2025-10-23 19:33:30,996 - model_building - DEBUG - Initializing model parameters from params
-2025-10-23 19:33:30,997 - model_building - DEBUG - Model training starred with 3649 samples
-2025-10-23 19:33:31,238 - model_building - DEBUG - Training Completed
-2025-10-23 19:33:31,249 - model_building - DEBUG - Model saved to model/model.pkl
-2025/10/23 19:33:31 WARNING mlflow.models.model: `artifact_path` is deprecated. Please use `name` instead.
-[31m2025/10/23 19:33:34 WARNING mlflow.models.model: Model logged without a signature and input example. Please set `input_example` parameter when logging the model to auto infer the model signature.[0m
+2025-10-27 14:58:59,448 - model_building - DEBUG - path: /mnt/c/Users/Lenovo/Desktop/Colleg/Sem 7/MLOPS-Project/mlruns
+2025-10-27 14:59:00,004 - model_building - DEBUG - Parameters retrieved from <_io.TextIOWrapper name='params.yaml' mode='r' encoding='UTF-8'>
+2025-10-27 14:59:00,108 - model_building - DEBUG - Data loaded from data/preprocessed/global_sustainable_energy_preprocessed2.csv
+2025-10-27 14:59:00,125 - model_building - DEBUG - Initializing model parameters from params
+2025-10-27 14:59:00,126 - model_building - DEBUG - Model training starred with 3649 samples
+2025-10-27 14:59:00,767 - model_building - DEBUG - Training Completed
+2025-10-27 14:59:00,777 - model_building - DEBUG - Model saved to model/model.pkl
+2025/10/27 14:59:00 WARNING mlflow.models.model: `artifact_path` is deprecated. Please use `name` instead.
+[31m2025/10/27 14:59:03 WARNING mlflow.models.model: Model logged without a signature and input example. Please set `input_example` parameter when logging the model to auto infer the model signature.[0m
 Optimal lambda: 0.01
