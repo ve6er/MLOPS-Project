@@ -1,7 +1,7 @@
 schema: '2.0'
 stages:
   preprocess:
-    cmd: python src/data_preprocessing.py > logs/data_preprocessing.log 2>&1
+    cmd: python src/data_preprocessing.py
     deps:
     - path: data/raw/global-data-on-sustainable-energy.csv
       hash: md5
@@ -10,22 +10,32 @@ stages:
       isexec: true
     - path: params.yaml
       hash: md5
-      md5: 6312cb5ed23914bb07ee987554902a3f
-      size: 1135
+      md5: 2e0c4ca096b191957cd8feecb2d9498f
+      size: 1997
       isexec: true
     - path: src/data_preprocessing.py
       hash: md5
-      md5: fa2df388a39d8549dc7cb1ca3ee79274
-      size: 4243
+      md5: 578e90c3c4873d7dff1067d28f801b44
+      size: 6383
       isexec: true
     outs:
+    - path: artifacts/imputation_values.json
+      hash: md5
+      md5: 33377879213c198d0efe5dd6e11576b8
+      size: 902
+      isexec: true
+    - path: artifacts/ohe_columns.json
+      hash: md5
+      md5: 349b4d41c9a2dfcabe5c0724d4ca3e02
+      size: 4757
+      isexec: true
     - path: data/preprocessed/global_sustainable_energy_preprocessed2.csv
       hash: md5
       md5: 9281ad7cfc4b813d9e061f042fe46490
       size: 4263522
       isexec: true
   feature_engineering:
-    cmd: python src/feature_engineering.py > logs/feature_engineering.log 2>&1
+    cmd: python src/feature_engineering.py --config params.yaml
     deps:
     - path: data/preprocessed/global_sustainable_energy_preprocessed2.csv
       hash: md5
@@ -34,8 +44,8 @@ stages:
       isexec: true
     - path: params.yaml
       hash: md5
-      md5: 6312cb5ed23914bb07ee987554902a3f
-      size: 1135
+      md5: 2e0c4ca096b191957cd8feecb2d9498f
+      size: 1997
       isexec: true
     - path: src/feature_engineering.py
       hash: md5
@@ -43,15 +53,20 @@ stages:
       size: 3071
       isexec: true
     outs:
-    - path: data/preprocessed/test.csv
+    - path: artifacts/boxcox_lambdas.json
       hash: md5
-      md5: f5d2bfcb449e5c0cda5fe924acceeee9
-      size: 905661
+      md5: 88ed9abfc51a78b5a2437a75b6aaffd9
+      size: 597
       isexec: true
-    - path: data/preprocessed/train.csv
+    - path: data/processed/test.csv
       hash: md5
-      md5: c584eaa8f7b1bb49933b724ff9ad0a0d
-      size: 3614930
+      md5: 28cb8f3cc663ee3b5eaf6902859cee8a
+      size: 905672
+      isexec: true
+    - path: data/processed/train.csv
+      hash: md5
+      md5: d90e14b6ab6a12a7a8ed9f3f182a441e
+      size: 3614927
       isexec: true
   model_building:
     cmd: python src/model_building.py > logs/model_building.log 2>&1
@@ -81,4 +96,77 @@ stages:
       hash: md5
       md5: b78cf8e1b0839f78b41bc0c6eb712ec0
       size: 1963
+      isexec: true
+  train:
+    cmd: python src/train.py --config params.yaml
+    deps:
+    - path: data/processed/test.csv
+      hash: md5
+      md5: 28cb8f3cc663ee3b5eaf6902859cee8a
+      size: 905672
+      isexec: true
+    - path: data/processed/train.csv
+      hash: md5
+      md5: d90e14b6ab6a12a7a8ed9f3f182a441e
+      size: 3614927
+      isexec: true
+    - path: params.yaml
+      hash: md5
+      md5: 2e0c4ca096b191957cd8feecb2d9498f
+      size: 1997
+      isexec: true
+    - path: src/train.py
+      hash: md5
+      md5: bc65cd40ea96e8c78f84cbb937398f8b
+      size: 4976
+      isexec: true
+    outs:
+    - path: artifacts/scaler.pkl
+      hash: md5
+      md5: 87d62e01994ccab83c143320b6643033
+      size: 8862
+      isexec: true
+    - path: models_exp
+      hash: md5
+      md5: 7ebf71865e5530cb0420e869abf1cc64.dir
+      size: 4605352
+      nfiles: 3
+    - path: reports_exp
+      hash: md5
+      md5: 76c52349e7f83e24bcd70e8032fd409a.dir
+      size: 1095
+      nfiles: 21
+  select_best:
+    cmd: python src/select_best_model.py --config params.yaml
+    deps:
+    - path: models_exp
+      hash: md5
+      md5: 7ebf71865e5530cb0420e869abf1cc64.dir
+      size: 4605352
+      nfiles: 3
+    - path: params.yaml
+      hash: md5
+      md5: 2e0c4ca096b191957cd8feecb2d9498f
+      size: 1997
+      isexec: true
+    - path: reports_exp
+      hash: md5
+      md5: 76c52349e7f83e24bcd70e8032fd409a.dir
+      size: 1095
+      nfiles: 21
+    - path: src/select_best_model.py
+      hash: md5
+      md5: b778f45c456d62dc95beb2ba2b85bf88
+      size: 3647
+      isexec: true
+    outs:
+    - path: model/model.pkl
+      hash: md5
+      md5: c6d768f3e9ea97fed59515aa7038ffb9
+      size: 4601347
+      isexec: true
+    - path: reports/best_model_summary.json
+      hash: md5
+      md5: a229eb66af7b4ea4c2804122bcde6c12
+      size: 209
       isexec: true
