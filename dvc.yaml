@@ -1,29 +1,45 @@
 stages:
   preprocess:
-    cmd: python src/data_preprocessing.py > logs/data_preprocessing.log 2>&1
+    cmd: python src/data_preprocessing.py
     deps:
-      - data/raw/global-data-on-sustainable-energy.csv
       - src/data_preprocessing.py
+      - data/raw/global-data-on-sustainable-energy.csv
       - params.yaml
     outs:
       - data/preprocessed/global_sustainable_energy_preprocessed2.csv
+      - artifacts/imputation_values.json
+      - artifacts/ohe_columns.json
 
   feature_engineering:
-    cmd: python src/feature_engineering.py > logs/feature_engineering.log 2>&1
+    cmd: python src/feature_engineering.py --config params.yaml
     deps:
-      - data/preprocessed/global_sustainable_energy_preprocessed2.csv
       - src/feature_engineering.py
+      - data/preprocessed/global_sustainable_energy_preprocessed2.csv
       - params.yaml
     outs:
-      - data/preprocessed/train.csv
-      - data/preprocessed/test.csv
+      - data/processed/train.csv
+      - data/processed/test.csv
+      - artifacts/boxcox_lambdas.json
 
-  model_building:
-    cmd: python src/model_building.py > logs/model_building.log 2>&1
+  train:
+    cmd: python src/train.py --config params.yaml
     deps:
-      - data/preprocessed/train.csv
-      - data/preprocessed/test.csv
-      - src/model_building.py
+      - src/train.py
+      - data/processed/train.csv
+      - data/processed/test.csv
       - params.yaml
     outs:
-      - model/model.pkl
+      - models_exp # DVC tracks this whole directory of models
+      - reports_exp # DVC tracks this whole directory of metrics
+      - artifacts/scaler.pkl
+
+  select_best:
+    cmd: python src/select_best_model.py --config params.yaml
+    deps:
+      - src/select_best_model.py
+      - models_exp # Depends on all models
+      - reports_exp # Depends on all metrics
+      - params.yaml
+    outs:
+      - model/model.pkl # The final, single model for the API
+      - reports/best_model_summary.json

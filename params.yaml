@@ -20,13 +20,40 @@ feature_engineering:
     - 'gdp_per_capita'
 
 data_split:
-  train_path: data/preprocessed/train.csv
-  test_path: data/preprocessed/test.csv
+  train_path: data/processed/train.csv
+  test_path: data/processed/test.csv
   test_size: 0.2
   random_state: 42
-  target_col: 'Renewables (% equivalent primary energy)'
+  target_col: 'Renewables (% equivalent primary energy)' # This was missing, I'm guessing based on your code
 
-model_building:
-  alphas: [0.01, 0.1, 1.0, 10.0, 100.0]
-  store_cv_values: true
-  model_path: model/model.pkl
+train:
+  models_dir: models_exp # Directory to save all experimental models
+  reports_dir: reports_exp # Directory for DVCLive to save metrics
+  scaler_path: artifacts/scaler.pkl
+  
+  # Define the metric to find the best model
+  primary_metric: 'r2_score' 
+  metric_goal: 'maximize' # 'maximize' or 'minimize'
+
+  # Define all models to experiment with
+  experiments:
+    ridge:
+      type: 'Ridge'
+      params:
+        alpha: 1.0
+    
+    lasso:
+      type: 'Lasso'
+      params:
+        alpha: 0.5
+        
+    random_forest:
+      type: 'RandomForestRegressor'
+      params:
+        n_estimators: 100
+        max_depth: 10
+        random_state: 42
+
+select_best:
+  final_model_path: model/model.pkl # The final model path for app.py
+  best_model_summary_path: reports/best_model_summary.json

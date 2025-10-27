@@ -1,47 +1,61 @@
-name: CI/CD Pipeline for DVC Project
+name: MLOps CI/CD Pipeline
 
 on:
   push:
     branches:
-      - master
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
-  build-and-deploy:
+  run-pipeline:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v3
 
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10' # Or your preferred version
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          
       - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v2
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
+          aws-region: us-east-1 # Or your bucket's region
 
-      - name: Login to Amazon ECR
+      - name: Setup DVC
+        uses: iterative/setup-dvc@v1
+
+      - name: Pull DVC data
         run: |
-          aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | \
-          docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
+          dvc pull data/raw/global-data-on-sustainable-energy.csv.dvc
+          # Pull other stages to use cache if available
+          dvc pull -r my-s3-remote --all --glob
 
-      - name: Build Docker Image
+      - name: Reproduce the full pipeline
         run: |
-          docker build -t ${{ secrets.ECR_REPOSITORY }} .
-          docker tag ${{ secrets.ECR_REPOSITORY }}:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.ECR_REPOSITORY }}:latest
-
-      - name: Push Docker Image to ECR
+          dvc repro select_best
+          
+      - name: Show DVC experiments
         run: |
-          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.ECR_REPOSITORY }}:latest
-
-      - name: Deploy on EC2
-        uses: appleboy/ssh-action@v1.0.0
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.EC2_KEY }}
-          script: |
-            docker pull ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.ECR_REPOSITORY }}:latest
-            docker stop dvc-container || true
-            docker rm dvc-container || true
-            docker run -d --name dvc-container -p 80:8000 ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.ECR_REPOSITORY }}:latest
+          dvc exp show
+          
+      - name: Push new artifacts to S3
+        run: |
+          dvc push -r my-s3-remote --all --glob
+          
+      - name: Commit DVC lock files
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git add dvc.lock params.yaml # Commit lock file and any param changes
+          git commit -m "ci: update dvc.lock and metrics" || echo "No changes to commit"
+          git push
