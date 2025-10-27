@@ -6,4 +6,4 @@ pyyaml
 dvclive
 flask
 gunicorn 
-
+dvc-s3
