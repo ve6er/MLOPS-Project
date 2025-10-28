@@ -1,7 +1,7 @@
 # .github/workflows/deploy.yaml
 
 name: CD - Build and Deploy to EC2 via S3
-
+# Adding this comment to force a re-run
 # Triggered after the training workflow completes successfully
 on:
   workflow_run:
