@@ -51,11 +51,12 @@ train:
     random_forest:
       type: 'RandomForestRegressor'
       params:
-        n_estimators: 110
-        max_depth: 12
+        n_estimators: 100
+        max_depth: 10
         random_state: 42
 
 select_best:
   final_model_path: model/model.pkl # The final model path for app.py
   best_model_summary_path: reports/best_model_summary.json
+
 
