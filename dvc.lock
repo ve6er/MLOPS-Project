@@ -10,8 +10,8 @@ stages:
       isexec: true
     - path: params.yaml
       hash: md5
-      md5: 2e0c4ca096b191957cd8feecb2d9498f
-      size: 1997
+      md5: 3020370476025695815deac6d9faba54
+      size: 1999
     - path: src/data_preprocessing.py
       hash: md5
       md5: 93baee9fd7cae5b165b50d0dcf56b38d
@@ -38,8 +38,8 @@ stages:
       size: 4263522
     - path: params.yaml
       hash: md5
-      md5: 2e0c4ca096b191957cd8feecb2d9498f
-      size: 1997
+      md5: 3020370476025695815deac6d9faba54
+      size: 1999
     - path: src/feature_engineering.py
       hash: md5
       md5: 05699bae961a91b9045f12bb430a810a
@@ -99,8 +99,8 @@ stages:
       size: 3614927
     - path: params.yaml
       hash: md5
-      md5: 2e0c4ca096b191957cd8feecb2d9498f
-      size: 1997
+      md5: 3020370476025695815deac6d9faba54
+      size: 1999
     - path: src/train.py
       hash: md5
       md5: bc65cd40ea96e8c78f84cbb937398f8b
@@ -112,30 +112,30 @@ stages:
       size: 8862
     - path: models_exp
       hash: md5
-      md5: 7c08ba31d3b1f92cda05c0e2ccf8c139.dir
-      size: 4605352
+      md5: 3fd1638efbfa758aa471b391a9419e7a.dir
+      size: 7808446
       nfiles: 3
     - path: reports_exp
       hash: md5
-      md5: 5b26e29bed7f84073b250aa7d6705a8c.dir
-      size: 1095
+      md5: 830d9065ff1d9fa37fefa9f246ad26a3.dir
+      size: 1091
       nfiles: 21
   select_best:
     cmd: python src/select_best_model.py --config params.yaml
     deps:
     - path: models_exp
       hash: md5
-      md5: 7c08ba31d3b1f92cda05c0e2ccf8c139.dir
-      size: 4605352
+      md5: 3fd1638efbfa758aa471b391a9419e7a.dir
+      size: 7808446
       nfiles: 3
     - path: params.yaml
       hash: md5
-      md5: 2e0c4ca096b191957cd8feecb2d9498f
-      size: 1997
+      md5: 3020370476025695815deac6d9faba54
+      size: 1999
     - path: reports_exp
       hash: md5
-      md5: 5b26e29bed7f84073b250aa7d6705a8c.dir
-      size: 1095
+      md5: 830d9065ff1d9fa37fefa9f246ad26a3.dir
+      size: 1091
       nfiles: 21
     - path: src/select_best_model.py
       hash: md5
@@ -144,9 +144,9 @@ stages:
     outs:
     - path: model/model.pkl
       hash: md5
-      md5: c6d768f3e9ea97fed59515aa7038ffb9
-      size: 4601347
+      md5: e76dc247ae45345ac3e2dc61cb6fde19
+      size: 7804441
     - path: reports/best_model_summary.json
       hash: md5
-      md5: a229eb66af7b4ea4c2804122bcde6c12
-      size: 209
+      md5: e4077727e060ec3341830412d06734ad
+      size: 207
