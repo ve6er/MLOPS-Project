@@ -27,6 +27,24 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11' # Use the same version as your ci-cd.yaml
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          
+      - name: Setup DVC
+        uses: iterative/setup-dvc@v1
+
+      - name: Pull artifacts from DVC
+        run: |
+          # This command pulls all data/models/artifacts from your S3 remote
+          # Use the same remote name as in your ci-cd.yaml
+          dvc pull -r mlops_remote --force
+          
       - name: Build Docker image
         run: |
           docker build -t $IMAGE_NAME_AND_TAG .
