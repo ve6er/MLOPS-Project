@@ -66,9 +66,24 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           port: 22
           script: |
+            # --- START: Add swap space to prevent OOM Kill ---
+            if [ -f /swapfile ]; then
+              echo "Swap file already exists."
+            else
+              echo "Creating 2GB swap file..."
+              sudo fallocate -l 2G /swapfile
+              sudo chmod 600 /swapfile
+              sudo mkswap /swapfile
+              sudo swapon /swapfile
+              # Make swap permanent
+              echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
+              echo "Swap file created and enabled."
+            fi
+            # --- END: Add swap space ---
+
             # Set variables
             S3_PATH="s3://${{ secrets.AWS_S3_BUCKET }}/${{ secrets.S3_IMAGE_KEY }}"
-            LOCAL_IMAGE_FILE="/home/${{ secrets.EC2_USERNAME }}/image.tar" # Use username variable for home path
+            LOCAL_IMAGE_FILE="/home/${{ secrets.EC2_USERNAME }}/image.tar"
             IMAGE_TAG_TO_RUN="${{ env.IMAGE_NAME_AND_TAG }}"
             
             echo "Downloading new image from $S3_PATH"
@@ -82,7 +97,7 @@ jobs:
             sudo docker rm ml-api-container || true
             
             echo "Running new container..."
-            # Note: Using sudo for docker commands
+            # Using port 80 as you configured
             sudo docker run -d --name ml-api-container --restart always -p 80:5000 $IMAGE_TAG_TO_RUN
             
             echo "Cleaning up local tar file"
