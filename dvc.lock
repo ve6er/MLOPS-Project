@@ -139,6 +139,16 @@ stages:
   select_best:
     cmd: python src/select_best_model.py --config params.yaml
     deps:
+    - path: artifacts/scaler.pkl
+      hash: md5
+      md5: 87d62e01994ccab83c143320b6643033
+      size: 8862
+      isexec: true
+    - path: data/processed/test.csv
+      hash: md5
+      md5: 28cb8f3cc663ee3b5eaf6902859cee8a
+      size: 905672
+      isexec: true
     - path: models_exp
       hash: md5
       md5: 7ebf71865e5530cb0420e869abf1cc64.dir
@@ -156,8 +166,8 @@ stages:
       nfiles: 21
     - path: src/select_best_model.py
       hash: md5
-      md5: b778f45c456d62dc95beb2ba2b85bf88
-      size: 3647
+      md5: 25c83499afbd5db939daca1c773c9786
+      size: 6562
       isexec: true
     outs:
     - path: model/model.pkl
