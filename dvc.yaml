@@ -2,47 +2,62 @@ stages:
   preprocess:
     cmd: python src/data_preprocessing.py
     deps:
-      - src/data_preprocessing.py
-      - data/raw/global-data-on-sustainable-energy.csv
-      - params.yaml
+    - src/data_preprocessing.py
+    - data/raw/global-data-on-sustainable-energy.csv
+    - params.yaml
     outs:
-      - data/preprocessed/global_sustainable_energy_preprocessed2.csv
-      - artifacts/imputation_values.json
-      - artifacts/ohe_columns.json
+    - data/preprocessed/global_sustainable_energy_preprocessed2.csv
+    - artifacts/imputation_values.json
+    - artifacts/ohe_columns.json
 
   feature_engineering:
     cmd: python src/feature_engineering.py --config params.yaml
     deps:
-      - src/feature_engineering.py
-      - data/preprocessed/global_sustainable_energy_preprocessed2.csv
-      - params.yaml
+    - src/feature_engineering.py
+    - data/preprocessed/global_sustainable_energy_preprocessed2.csv
+    - params.yaml
     outs:
-      - data/processed/train.csv
-      - data/processed/test.csv
-      - artifacts/boxcox_lambdas.json
+    - data/processed/train.csv
+    - data/processed/test.csv
+    - artifacts/boxcox_lambdas.json
 
   train:
     cmd: python src/train.py --config params.yaml
     deps:
-      - src/train.py
-      - data/processed/train.csv
-      - data/processed/test.csv  # Train stage needs test data for evaluation
-      - params.yaml
+    - src/train.py
+    - data/processed/train.csv
+    - data/processed/test.csv    # Train stage needs test data for evaluation
+    - params.yaml
     outs:
-      - models_exp # DVC tracks this whole directory of models
-      - reports_exp # DVC tracks this whole directory of metrics
-      - artifacts/scaler.pkl
+    - models_exp   # DVC tracks this whole directory of models
+    - reports_exp   # DVC tracks this whole directory of metrics
+    - artifacts/scaler.pkl
 
   select_best:
     cmd: python src/select_best_model.py --config params.yaml
     deps:
-      - src/select_best_model.py
-      - models_exp    # Depends on all new models
-      - reports_exp   # Depends on all new metrics
-      - params.yaml
+    - src/select_best_model.py
+    - models_exp      # Depends on all new models
+    - reports_exp     # Depends on all new metrics
+    - params.yaml
       # --- NEW DEPS ---
-      - data/processed/test.csv  # Needs new test data to eval old model
-      - artifacts/scaler.pkl    # Needs new scaler to eval old model
+    - data/processed/test.csv    # Needs new test data to eval old model
+    - artifacts/scaler.pkl      # Needs new scaler to eval old model
     outs:
-      - model/model.pkl # The final model (either old or new)
-      - reports/best_model_summary.json
+    - model/model.pkl   # The final model (either old or new)
+    - reports/best_model_summary.json
+params:
+- reports_exp/ridge/params.yaml
+- reports_exp/lasso/params.yaml
+- reports_exp/random_forest/params.yaml
+metrics:
+- reports_exp/ridge/metrics.json
+- reports_exp/lasso/metrics.json
+- reports_exp/random_forest/metrics.json
+plots:
+- reports_exp/ridge/plots/metrics:
+    x: step
+- reports_exp/lasso/plots/metrics:
+    x: step
+- reports_exp/random_forest/plots/metrics:
+    x: step
