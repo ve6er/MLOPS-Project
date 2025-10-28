@@ -47,16 +47,16 @@ stages:
     outs:
     - path: artifacts/boxcox_lambdas.json
       hash: md5
-      md5: 178b2f1b388e8124e3ca084c31bb18a2
-      size: 598
+      md5: 88ed9abfc51a78b5a2437a75b6aaffd9
+      size: 597
     - path: data/processed/test.csv
       hash: md5
-      md5: 27f735c7bfc6ee20040ffada2d2909e6
-      size: 905708
+      md5: 28cb8f3cc663ee3b5eaf6902859cee8a
+      size: 905672
     - path: data/processed/train.csv
       hash: md5
-      md5: d85f78f39d0fe5e1e31e978992a08e5c
-      size: 3615071
+      md5: d90e14b6ab6a12a7a8ed9f3f182a441e
+      size: 3614927
   model_building:
     cmd: python src/model_building.py > logs/model_building.log 2>&1
     deps:
@@ -91,12 +91,12 @@ stages:
     deps:
     - path: data/processed/test.csv
       hash: md5
-      md5: 27f735c7bfc6ee20040ffada2d2909e6
-      size: 905708
+      md5: 28cb8f3cc663ee3b5eaf6902859cee8a
+      size: 905672
     - path: data/processed/train.csv
       hash: md5
-      md5: d85f78f39d0fe5e1e31e978992a08e5c
-      size: 3615071
+      md5: d90e14b6ab6a12a7a8ed9f3f182a441e
+      size: 3614927
     - path: params.yaml
       hash: md5
       md5: 2e0c4ca096b191957cd8feecb2d9498f
@@ -108,16 +108,16 @@ stages:
     outs:
     - path: artifacts/scaler.pkl
       hash: md5
-      md5: 80e7126eba789d3a4bdc26ca1962c1a9
+      md5: 87d62e01994ccab83c143320b6643033
       size: 8862
     - path: models_exp
       hash: md5
-      md5: d371186ae454653144649b4706add16c.dir
-      size: 4605208
+      md5: 7c08ba31d3b1f92cda05c0e2ccf8c139.dir
+      size: 4605352
       nfiles: 3
     - path: reports_exp
       hash: md5
-      md5: 774613f5e9eaf27237e75b8d526a318e.dir
+      md5: 5b26e29bed7f84073b250aa7d6705a8c.dir
       size: 1095
       nfiles: 21
   select_best:
@@ -125,8 +125,8 @@ stages:
     deps:
     - path: models_exp
       hash: md5
-      md5: d371186ae454653144649b4706add16c.dir
-      size: 4605208
+      md5: 7c08ba31d3b1f92cda05c0e2ccf8c139.dir
+      size: 4605352
       nfiles: 3
     - path: params.yaml
       hash: md5
@@ -134,7 +134,7 @@ stages:
       size: 1997
     - path: reports_exp
       hash: md5
-      md5: 774613f5e9eaf27237e75b8d526a318e.dir
+      md5: 5b26e29bed7f84073b250aa7d6705a8c.dir
       size: 1095
       nfiles: 21
     - path: src/select_best_model.py
@@ -144,9 +144,9 @@ stages:
     outs:
     - path: model/model.pkl
       hash: md5
-      md5: 03ad2542ad4d461d24fc3b111b0cb98a
-      size: 4601203
+      md5: c6d768f3e9ea97fed59515aa7038ffb9
+      size: 4601347
     - path: reports/best_model_summary.json
       hash: md5
-      md5: c22f9170731993dfbf4a0d5120fe2832
-      size: 208
+      md5: a229eb66af7b4ea4c2804122bcde6c12
+      size: 209
