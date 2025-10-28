@@ -83,7 +83,7 @@ jobs:
             
             echo "Running new container..."
             # Note: Using sudo for docker commands
-            sudo docker run -d --name ml-api-container --restart always -p 8080:5000 $IMAGE_TAG_TO_RUN
+            sudo docker run -d --name ml-api-container --restart always -p 80:5000 $IMAGE_TAG_TO_RUN
             
             echo "Cleaning up local tar file"
             rm $LOCAL_IMAGE_FILE
