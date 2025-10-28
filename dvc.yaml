@@ -6,7 +6,6 @@ stages:
     - data/raw/global-data-on-sustainable-energy.csv
     - params.yaml
     outs:
-      # --- Make sure this matches params.yaml ---
     - data/preprocessed/global_sustainable_energy_preprocessed2.csv
     - artifacts/imputation_values.json
     - artifacts/ohe_columns.json
@@ -27,7 +26,7 @@ stages:
     deps:
     - src/train.py
     - data/processed/train.csv
-    - data/processed/test.csv
+    - data/processed/test.csv    # Train stage needs test data for evaluation
     - params.yaml
     outs:
     - models_exp   # DVC tracks this whole directory of models
@@ -38,11 +37,14 @@ stages:
     cmd: python src/select_best_model.py --config params.yaml
     deps:
     - src/select_best_model.py
-    - models_exp   # Depends on all models
-    - reports_exp   # Depends on all metrics
+    - models_exp      # Depends on all new models
+    - reports_exp     # Depends on all new metrics
     - params.yaml
+      # --- NEW DEPS ---
+    - data/processed/test.csv    # Needs new test data to eval old model
+    - artifacts/scaler.pkl      # Needs new scaler to eval old model
     outs:
-    - model/model.pkl   # The final, single model for the API
+    - model/model.pkl   # The final model (either old or new)
     - reports/best_model_summary.json
 params:
 - reports_exp/ridge/params.yaml
