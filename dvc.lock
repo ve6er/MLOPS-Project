@@ -12,28 +12,23 @@ stages:
       hash: md5
       md5: 2e0c4ca096b191957cd8feecb2d9498f
       size: 1997
-      isexec: true
     - path: src/data_preprocessing.py
       hash: md5
       md5: 93baee9fd7cae5b165b50d0dcf56b38d
       size: 7036
-      isexec: true
     outs:
     - path: artifacts/imputation_values.json
       hash: md5
       md5: 33377879213c198d0efe5dd6e11576b8
       size: 902
-      isexec: true
     - path: artifacts/ohe_columns.json
       hash: md5
       md5: 69966c74247a0314080228847d0350bb
       size: 4709
-      isexec: true
     - path: data/preprocessed/global_sustainable_energy_preprocessed2.csv
       hash: md5
       md5: 9281ad7cfc4b813d9e061f042fe46490
       size: 4263522
-      isexec: true
   feature_engineering:
     cmd: python src/feature_engineering.py --config params.yaml
     deps:
@@ -41,33 +36,27 @@ stages:
       hash: md5
       md5: 9281ad7cfc4b813d9e061f042fe46490
       size: 4263522
-      isexec: true
     - path: params.yaml
       hash: md5
       md5: 2e0c4ca096b191957cd8feecb2d9498f
       size: 1997
-      isexec: true
     - path: src/feature_engineering.py
       hash: md5
       md5: 05699bae961a91b9045f12bb430a810a
       size: 3071
-      isexec: true
     outs:
     - path: artifacts/boxcox_lambdas.json
       hash: md5
       md5: 88ed9abfc51a78b5a2437a75b6aaffd9
       size: 597
-      isexec: true
     - path: data/processed/test.csv
       hash: md5
       md5: 28cb8f3cc663ee3b5eaf6902859cee8a
       size: 905672
-      isexec: true
     - path: data/processed/train.csv
       hash: md5
       md5: d90e14b6ab6a12a7a8ed9f3f182a441e
       size: 3614927
-      isexec: true
   model_building:
     cmd: python src/model_building.py > logs/model_building.log 2>&1
     deps:
@@ -104,79 +93,60 @@ stages:
       hash: md5
       md5: 28cb8f3cc663ee3b5eaf6902859cee8a
       size: 905672
-      isexec: true
     - path: data/processed/train.csv
       hash: md5
       md5: d90e14b6ab6a12a7a8ed9f3f182a441e
       size: 3614927
-      isexec: true
     - path: params.yaml
       hash: md5
       md5: 2e0c4ca096b191957cd8feecb2d9498f
       size: 1997
-      isexec: true
     - path: src/train.py
       hash: md5
       md5: bc65cd40ea96e8c78f84cbb937398f8b
       size: 4976
-      isexec: true
     outs:
     - path: artifacts/scaler.pkl
       hash: md5
       md5: 87d62e01994ccab83c143320b6643033
       size: 8862
-      isexec: true
     - path: models_exp
       hash: md5
-      md5: 7ebf71865e5530cb0420e869abf1cc64.dir
+      md5: 7c08ba31d3b1f92cda05c0e2ccf8c139.dir
       size: 4605352
       nfiles: 3
     - path: reports_exp
       hash: md5
-      md5: 76c52349e7f83e24bcd70e8032fd409a.dir
+      md5: 5b26e29bed7f84073b250aa7d6705a8c.dir
       size: 1095
       nfiles: 21
   select_best:
     cmd: python src/select_best_model.py --config params.yaml
     deps:
-    - path: artifacts/scaler.pkl
-      hash: md5
-      md5: 87d62e01994ccab83c143320b6643033
-      size: 8862
-      isexec: true
-    - path: data/processed/test.csv
-      hash: md5
-      md5: 28cb8f3cc663ee3b5eaf6902859cee8a
-      size: 905672
-      isexec: true
     - path: models_exp
       hash: md5
-      md5: 7ebf71865e5530cb0420e869abf1cc64.dir
+      md5: 7c08ba31d3b1f92cda05c0e2ccf8c139.dir
       size: 4605352
       nfiles: 3
     - path: params.yaml
       hash: md5
       md5: 2e0c4ca096b191957cd8feecb2d9498f
       size: 1997
-      isexec: true
     - path: reports_exp
       hash: md5
-      md5: 76c52349e7f83e24bcd70e8032fd409a.dir
+      md5: 5b26e29bed7f84073b250aa7d6705a8c.dir
       size: 1095
       nfiles: 21
     - path: src/select_best_model.py
       hash: md5
-      md5: 25c83499afbd5db939daca1c773c9786
-      size: 6562
-      isexec: true
+      md5: b778f45c456d62dc95beb2ba2b85bf88
+      size: 3647
     outs:
     - path: model/model.pkl
       hash: md5
       md5: c6d768f3e9ea97fed59515aa7038ffb9
       size: 4601347
-      isexec: true
     - path: reports/best_model_summary.json
       hash: md5
       md5: a229eb66af7b4ea4c2804122bcde6c12
       size: 209
-      isexec: true
