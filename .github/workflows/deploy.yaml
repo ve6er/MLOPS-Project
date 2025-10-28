@@ -83,7 +83,7 @@ jobs:
 
             # Set variables
             S3_PATH="s3://${{ secrets.AWS_S3_BUCKET }}/${{ secrets.S3_IMAGE_KEY }}"
-            LOCAL_IMAGE_FILE="/home/${{ secrets.EC2_USERNAME }}/image.tar"
+            LOCAL_IMAGE_FILE="/home/${{ secrets.EC2_USER }}/image.tar"
             IMAGE_TAG_TO_RUN="${{ env.IMAGE_NAME_AND_TAG }}"
             
             echo "Downloading new image from $S3_PATH"
