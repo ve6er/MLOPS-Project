@@ -1,0 +1,78 @@
+# .github/workflows/deploy.yaml
+
+name: CD - Build and Deploy to EC2 via S3
+
+# Triggered after the training workflow completes successfully
+on:
+  workflow_run:
+    workflows: ["MLOps CI/CD Pipeline"] # <-- Change to your training workflow name
+    types:
+      - completed
+
+jobs:
+  build-and-deploy:
+    if: github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    
+    # Define a tag name to be used for the image
+    env:
+      IMAGE_NAME_AND_TAG: my-ml-api:latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Build Docker image
+        run: |
+          docker build -t $IMAGE_NAME_AND_TAG .
+
+      - name: Save Docker image to a tar file
+        run: |
+          docker save $IMAGE_NAME_AND_TAG -o image.tar
+          echo "Docker image saved to image.tar"
+
+      - name: Upload image to S3
+        run: |
+          aws s3 cp image.tar s3://${{ secrets.AWS_S3_BUCKET }}/${{ secrets.S3_IMAGE_KEY }}
+          echo "Image tarball uploaded to S3 bucket."
+
+      - name: Deploy to EC2 using AWS SSM
+        uses: aws-actions/aws-ssm-send-command@v1
+        with:
+          instance-ids: ${{ secrets.EC2_INSTANCE_ID }}
+          comment: "Deploying new Docker image from S3"
+          
+          # This multi-line command runs ON your EC2 instance
+          command: |
+            #!/bin/bash
+            S3_PATH="s3://${{ secrets.AWS_S3_BUCKET }}/${{ secrets.S3_IMAGE_KEY }}"
+            LOCAL_IMAGE_FILE="/home/ec2-user/image.tar" # Or /home/ubuntu/image.tar
+            IMAGE_TAG_TO_RUN="${{ env.IMAGE_NAME_AND_TAG }}"
+            
+            echo "Downloading new image from $S3_PATH"
+            aws s3 cp $S3_PATH $LOCAL_IMAGE_FILE --region ${{ secrets.AWS_REGION }}
+            
+            echo "Loading image into Docker"
+            docker load -i $LOCAL_IMAGE_FILE
+            
+            echo "Stopping and removing old container..."
+            docker stop ml-api-container || true
+            docker rm ml-api-container || true
+            
+            echo "Running new container..."
+            # ---
+            # IMPORTANT: Customize this 'docker run' command!
+            # - Add your -p port mappings (e.g., -p 80:5000)
+            # - Add any -e environment variables your app needs
+            # ---
+            docker run -d --name ml-api-container --restart always -p 8080:5000 $IMAGE_TAG_TO_RUN
+            
+            echo "Cleaning up local tar file"
+            rm $LOCAL_IMAGE_FILE
