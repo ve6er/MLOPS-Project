@@ -3,7 +3,7 @@ import joblib
 import pandas as pd
 import json
 import yaml # Import yaml
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 import scipy.special as sp 
 import logging
 
@@ -70,10 +70,7 @@ except Exception as e:
 # --- 4. Define Endpoints ---
 @app.route("/", methods=["GET"])
 def read_root():
-    if model_artifacts:
-        return jsonify({"status": "ok", "message": "API is running and artifacts are loaded. POST to /predict."})
-    else:
-        return jsonify({"status": "error", "message": "API is down. Artifacts failed to load. Check server logs."}), 500
+    return render_template("index.html")
 
 @app.route("/predict", methods=["POST"])
 def predict():
