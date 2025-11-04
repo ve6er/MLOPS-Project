@@ -16,6 +16,7 @@ on:
       - 'Dockerfile'
       - '.dockerignore'
       - 'requirements.txt'
+      - 'templates/**'
 
 jobs:
   build-and-deploy:
