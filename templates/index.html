@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Renewable Energy Share Prediction</title>
+
+    <style>
+        /* Google Font */
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+        :root {
+            /* Theme Colors */
+            --primary-color: #66BB6A; /* Soft Green */
+            --secondary-color: #FFEB3B; /* Vibrant Yellow */
+            --text-color-light: #FFFFFF;
+            --text-color-dark: #222; /* Darker text for yellow button */
+            
+            /* Dark Glassmorphism Effect */
+            --glass-bg: rgba(0, 0, 0, 0.3); /* Dark, smoky background */
+            --glass-border: 1px solid rgba(255, 255, 255, 0.15);
+            --backdrop-blur: 10px;
+            
+            --border-radius: 12px;
+        }
+
+        /* Brighter placeholder text for better contrast */
+        ::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+        color: rgba(255, 255, 255, 0.7) !important;
+        }
+        ::-moz-placeholder { /* Firefox 19+ */
+        color: rgba(255, 255, 255, 0.7) !important;
+        }
+        :-ms-input-placeholder { /* IE 10+ */
+        color: rgba(255, 255, 255, 0.7) !important;
+        }
+        :-moz-placeholder { /* Firefox 18- */
+        color: rgba(255, 255, 255, 0.7) !important;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            color: var(--text-color-light);
+            
+            /* Full-screen gradient background */
+            background: linear-gradient(135deg, #2E7D32 0%, #FFC107 100%);
+            background-size: cover;
+            
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .container {
+            /* Using the new dark glass variables */
+            background: var(--glass-bg);
+            backdrop-filter: blur(var(--backdrop-blur));
+            -webkit-backdrop-filter: blur(var(--backdrop-blur)); /* For Safari */
+            border: var(--glass-border);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37); /* Slightly stronger shadow */
+            
+            border-radius: var(--border-radius);
+            padding: 2rem 3rem;
+            width: 100%;
+            max-width: 800px; /* Increased max-width for 2 columns */
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        header h1 {
+            color: var(--text-color-light);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.9); /* Slightly brighter text */
+        }
+
+        .form-group {
+            margin-bottom: 1rem; /* Tighter margin for grid */
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: rgba(255, 255, 255, 0.95);
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            
+            /* Lighter glass inputs to contrast with container */
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            color: var(--text-color-light); /* Light text for input */
+            
+            border-radius: 8px;
+            font-size: 1rem;
+            box-sizing: border-box; 
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            /* Focus effect with secondary color */
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 3px rgba(255, 235, 59, 0.3);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 0.85rem;
+            border: none;
+            border-radius: 8px;
+            margin-top: 1rem; /* Add space before button */
+            
+            /* Using the secondary (yellow) color for high contrast */
+            background-color: var(--secondary-color);
+            color: var(--text-color-dark); /* Dark text on yellow bg */
+            
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .submit-btn:hover {
+            background-color: #FFD600; /* Brighter yellow */
+            transform: translateY(-2px); /* Add a little lift */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .submit-btn:active {
+            transform: scale(0.98);
+        }
+
+        #result-container {
+            margin-top: 2rem;
+            text-align: center;
+            
+            /* Darker background to match the container theme */
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.1); /* Subtle border */
+            
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+        }
+
+        #result-container h2 {
+            margin-top: 0;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 400;
+        }
+
+        #prediction-result {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-color-light);
+            
+            /* Add text shadow to make it pop */
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* 2-Column Grid CSS */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr; /* Default to 1 column on mobile */
+            gap: 0 1.5rem; /* 0 row gap, 1.5rem column gap */
+        }
+
+        /* This is a "media query" - it only applies the 2-column grid on larger screens */
+        @media (min-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr 1fr; /* 2 equal columns */
+            }
+        }
+
+        .form-column {
+            display: flex;
+            flex-direction: column;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Renewable Energy Share Prediction ☀️</h1>
+            <p>Enter the details below to predict the renewable energy share.</p>
+        </header>
+
+        <form id="prediction-form">
+            
+            <div class="form-grid">
+
+                <div class="form-column">
+                    <div class="form-group">
+                        <label for="Entity">Country / Entity</label>
+                        <input type="text" id="Entity" name="Entity" placeholder="E.g., Afghanistan" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="Year">Year</label>
+                        <input type="number" id="Year" name="Year" placeholder="E.g., 2000" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="Access_to_electricity">Access to electricity (% of population)</label>
+                        <input type="number" step="any" id="Access_to_electricity" name="Access to electricity (% of population)" placeholder="E.g., 1.613591" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="Access_to_clean_fuels">Access to clean fuels for cooking</label>
+                        <input type="number" step="any" id="Access_to_clean_fuels" name="Access to clean fuels for cooking" placeholder="E.g., 6.2" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="Renewable_electricity_capacity">Renewable-electricity-generating-capacity-per-capita</label>
+                        <input type="number" step="any" id="Renewable_electricity_capacity" name="Renewable-electricity-generating-capacity-per-capita" placeholder="E.g., 9.22" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="Financial_flows">Financial flows to developing countries (US $)</label>
+                        <input type="number" step="any" id="Financial_flows" name="Financial flows to developing countries (US $)" placeholder="E.g., 20000.0" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="Electricity_from_fossil">Electricity from fossil fuels (TWh)</label>
+                        <input type="number" step="any" id="Electricity_from_fossil" name="Electricity from fossil fuels (TWh)" placeholder="E.g., 0.16" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="Electricity_from_nuclear">Electricity from nuclear (TWh)</label>
+                        <input type="number" step="any" id="Electricity_from_nuclear" name="Electricity from nuclear (TWh)" placeholder="E.g., 0.0" required>
+                    </div>
+                </div>
+
+                <div class="form-column">
+                    <div class="form-group">
+                        <label for="Electricity_from_renewables">Electricity from renewables (TWh)</label>
+                        <input type="number" step="any" id="Electricity_from_renewables" name="Electricity from renewables (TWh)" placeholder="E.g., 0.31" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="Low_carbon_electricity">Low-carbon electricity (% electricity)</label>
+                        <input type="number" step="any" id="Low_carbon_electricity" name="Low-carbon electricity (% electricity)" placeholder="E.g., 65.95744" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="Primary_energy_consumption">Primary energy consumption per capita (kWh/person)</label>
+                        <input type="number" step="any" id="Primary_energy_consumption" name="Primary energy consumption per capita (kWh/person)" placeholder="E.g., 302.59482" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="Energy_intensity">Energy intensity level of primary energy (MJ/$2017 PPP GDP)</label>
+                        <input type="number" step="any" id="Energy_intensity" name="Energy intensity level of primary energy (MJ/$2017 PPP GDP)" placeholder="E.g., 1.64" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="Value_co2_emissions">Value_co2_emissions_kt_by_country</label>
+                        <input type="number" step="any" id="Value_co2_emissions" name="Value_co2_emissions_kt_by_country" placeholder="E.g., 760.0" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="Renewables_primary_energy">Renewables (% equivalent primary energy)</label>
+                        <input type="number" step="any" id="Renewables_primary_energy" name="Renewables (% equivalent primary energy)" placeholder="Optional: E.g., null">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="gdp_growth">GDP Growth</label>
+                        <input type="number" step="any" id="gdp_growth" name="gdp_growth" placeholder="Optional: E.g., null">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="gdp_per_capita">GDP per Capita</label>
+                        <input type="number" step="any" id="gdp_per_capita" name="gdp_per_capita" placeholder="Optional: E.g., null">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="Density">Density (P/Km2)</label>
+                        <input type="number" step="any" id="Density" name="Density(P/Km2)" placeholder="E.g., 60" required>
+                    </div>
+                </div>
+
+            </div> <button type="submit" class="submit-btn">Predict</button>
+        </form>
+
+        <div id="result-container">
+            <h2>Prediction:</h2>
+            <p id="prediction-result">---</p>
+        </div>
+    </div>
+
+    <script>
+    // Wait for the DOM to be fully loaded before running the script
+    document.addEventListener("DOMContentLoaded", () => {
+        
+        // Get references to the form and the result display area
+        const predictionForm = document.getElementById("prediction-form");
+        const resultElement = document.getElementById("prediction-result");
+        const resultContainer = document.getElementById("result-container");
+
+        // Add an event listener for the form's 'submit' event
+        predictionForm.addEventListener("submit", (event) => {
+            // Prevent the form from submitting the traditional way
+            event.preventDefault();
+
+            // Show loading state
+            resultElement.textContent = "Calculating...";
+
+            // --- 1. Collect Data from Form ---
+            const formData = new FormData(predictionForm);
+            const dataToSend = {};
+
+            formData.forEach((value, key) => {
+                // If the value is an empty string (like for optional fields), send null
+                // Otherwise, send the value (converted to a number if it's not 'Entity')
+                if (value === "") {
+                    dataToSend[key] = null;
+                } else if (key !== 'Entity') {
+                    dataToSend[key] = parseFloat(value);
+                } else {
+                    dataToSend[key] = value;
+                }
+            });
+
+            // Log the data to the console for debugging
+            console.log("Sending data:", JSON.stringify(dataToSend));
+
+            // --- 2. Send Data to Flask Backend ---
+            
+            // IMPORTANT: This 'fetch' URL is now a relative path.
+            // This is the most robust way to do it. It will work on
+            // 'http://127.0.0.1:5000' and on your deployed EC2 server
+            // without any changes.
+            fetch("/predict", { 
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(dataToSend),
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                // --- 3. Display the Result ---
+                console.log("Received data:", data);
+
+                if (data.prediction) {
+                    resultElement.textContent = `${parseFloat(data.prediction).toFixed(2)}`;
+                } else if (data.error) {
+                    resultElement.textContent = `Error: ${data.error}`;
+                } else {
+                    resultElement.textContent = "Received an unexpected response.";
+                }
+            })
+            .catch(error => {
+                // --- 4. Handle Errors ---
+                console.error("Fetch error:", error);
+                resultElement.textContent = "Prediction failed. (Is the server running?)";
+            });
+        });
+    });
+    </script>
+
+</body>
+</html>
