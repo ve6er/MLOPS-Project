@@ -58,7 +58,7 @@ try:
     # Check model feature count against OHE columns
     model_features = model_artifacts["model"].n_features_in_
     if len(model_artifacts["ohe_columns"]) != model_features:
-        app.logger.warning(f"--- WARNING: Loaded {len(ohe_cols)} columns, but model expects {model_features}. ---")
+        app.logger.warning(f"--- WARNING: Loaded {len(ohe_cols)} columns, but model expects {model_features}. --")
         
     app.logger.info("--- All artifacts loaded successfully ---")
 
