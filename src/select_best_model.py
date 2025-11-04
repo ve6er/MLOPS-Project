@@ -58,7 +58,7 @@ def select_model(config_path: str):
         reports_dir = train_params['reports_dir']
         models_dir = train_params['models_dir']
         primary_metric = train_params['primary_metric']
-        metric_goal = train_params['metric_goal']
+        # metric_goal = train_params['metric_goal'] # No longer used, logic is more complex
         
         final_model_path = select_params['final_model_path']
         summary_path = select_params['best_model_summary_path']
@@ -76,7 +76,7 @@ def select_model(config_path: str):
         else:
             logger.warning(f"Reports directory is empty or missing: {reports_dir}")
         
-        # 2. --- NEW: Evaluate the CURRENT production model ---
+        # 2. --- MODIFIED: Evaluate the CURRENT production model ---
         try:
             logger.info(f"Loading new test data from {split_params['test_path']}")
             test_df = pd.read_csv(split_params['test_path'])
@@ -98,6 +98,19 @@ def select_model(config_path: str):
             existing_metrics = evaluate_model(y_test, y_pred, p=X_test.shape[1])
             existing_metrics['model_name'] = 'existing_best_model'
             
+            # --- NEW: Try to load existing model's original CO2 emissions ---
+            original_emissions = np.inf # Default to infinity if no summary file
+            if os.path.exists(summary_path):
+                with open(summary_path, 'r') as f:
+                    summary_data = json.load(f)
+                    original_emissions = summary_data.get('co2_emissions_grams', np.inf)
+                logger.info(f"Loaded original CO2 emissions for existing model: {original_emissions}g")
+            else:
+                logger.warning("No best_model_summary.json found. Existing model CO2 emissions set to infinity.")
+            
+            existing_metrics['co2_emissions_grams'] = original_emissions
+            # -------------------------------------------------------------
+            
             all_metrics.append(existing_metrics)
             logger.info(f"Existing model scores: {existing_metrics}")
 
@@ -111,16 +124,39 @@ def select_model(config_path: str):
             logger.error("No metrics found from new experiments or existing model. Aborting.")
             raise FileNotFoundError("No models could be compared.")
 
-        # 3. Compare ALL models (new + existing)
+        # 3. --- NEW: Multi-criteria model selection ---
         metrics_df = pd.DataFrame(all_metrics)
-        logger.info(f"Comparing all {len(metrics_df)} models:\n{metrics_df}")
+        
+        # Handle models without CO2 data (e.g., old runs, or if existing_model had no summary)
+        metrics_df['co2_emissions_grams'] = metrics_df['co2_emissions_grams'].fillna(np.inf)
+        
+        logger.info(f"Comparing all {len(metrics_df)} models:\n{metrics_df.to_string()}")
 
-        if metric_goal == 'maximize':
+        if primary_metric not in metrics_df.columns:
+            logger.error(f"Primary metric '{primary_metric}' not found in any metrics file. Aborting.")
+            raise ValueError("Cannot compare models without primary metric.")
+            
+        if 'co2_emissions_grams' not in metrics_df.columns:
+            logger.warning("No 'co2_emissions_grams' metric found. Falling back to simple R2 maximization.")
             best_model_row = metrics_df.loc[metrics_df[primary_metric].idxmax()]
-        elif metric_goal == 'minimize':
-            best_model_row = metrics_df.loc[metrics_df[primary_metric].idxmin()]
         else:
-            raise ValueError(f"Invalid metric_goal: {metric_goal}. Must be 'maximize' or 'minimize'.")
+            # --- This is your new logic ---
+            logger.info("Applying eco-friendly selection logic...")
+            
+            # 1. Find the best R2 score
+            max_r2_score = metrics_df[primary_metric].max()
+            logger.info(f"Best R2 score available: {max_r2_score:.4f}")
+            
+            # 2. Find all models "good enough" (within 0.05 R2)
+            r2_threshold = max_r2_score - 0.05
+            logger.info(f"R2 threshold for candidates: {r2_threshold:.4f}")
+            
+            candidate_models_df = metrics_df[metrics_df[primary_metric] >= r2_threshold]
+            logger.info(f"Found {len(candidate_models_df)} candidates:\n{candidate_models_df.to_string()}")
+            
+            # 3. From the "good enough" models, find the one with the *lowest* CO2 emissions
+            best_model_row = candidate_models_df.loc[candidate_models_df['co2_emissions_grams'].idxmin()]
+            # -------------------------------
 
         best_model_name = best_model_row['model_name']
         best_metrics = best_model_row.to_dict()
@@ -128,7 +164,7 @@ def select_model(config_path: str):
         logger.info(f"And the winner is: {best_model_name}")
         logger.info(f"Winning metrics: {best_metrics}")
 
-        # 4. --- NEW: Update model *only if* a new one wins ---
+        # 4. --- MODIFIED: Update model *only if* a new one wins ---
         if best_model_name == 'existing_best_model':
             logger.info("The existing model is still the best. No changes will be made.")
         else:
@@ -137,7 +173,7 @@ def select_model(config_path: str):
             os.makedirs(os.path.dirname(final_model_path), exist_ok=True)
             shutil.copy(best_model_src, final_model_path)
             logger.info(f"Best model copied to {final_model_path}")
-        # --- End of new promotion logic ---
+        # --- End of promotion logic ---
 
         # 5. Save summary of the winner
         os.makedirs(os.path.dirname(summary_path), exist_ok=True)
@@ -154,3 +190,4 @@ if __name__ == '__main__':
     parser.add_argument("--config", default="params.yaml")
     args = parser.parse_args()
     select_model(config_path=args.config)
+

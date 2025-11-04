@@ -8,3 +8,4 @@ dvclive
 flask
 gunicorn 
 dvc-s3
+codecarbon

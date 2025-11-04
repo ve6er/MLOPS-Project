@@ -12,6 +12,10 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import Ridge, Lasso
 from sklearn.ensemble import RandomForestRegressor
 
+# --- NEW: Import CodeCarbon ---
+from codecarbon import EmissionsTracker
+# ------------------------------
+
 # --- Logging setup ---
 log_dir = 'logs'
 os.makedirs(log_dir, exist_ok=True)
@@ -50,7 +54,11 @@ def evaluate_model(y_true: np.ndarray, y_pred: np.ndarray, p: int) -> dict:
     r2 = r2_score(y_true, y_pred)
     
     n = len(y_true)
-    adj_r2 = 1 - (1 - r2) * (n - 1) / (n - p - 1)
+    # Handle potential division by zero
+    if (n - p - 1) == 0:
+        adj_r2 = r2
+    else:
+        adj_r2 = 1 - (1 - r2) * (n - 1) / (n - p - 1)
     
     metrics = {
         'mse': float(mse),
@@ -99,19 +107,45 @@ def train(config_path: str):
         for exp_name, exp_config in train_params['experiments'].items():
             logger.info(f"--- Running experiment: {exp_name} ---")
             
-            with Live(dir=os.path.join(train_params['reports_dir'], exp_name), save_dvc_exp=True) as live:
+            # --- MODIFICATION: Use DVCLive dir for CodeCarbon output ---
+            dvclive_dir = os.path.join(train_params['reports_dir'], exp_name)
+            
+            with Live(dir=dvclive_dir, save_dvc_exp=True) as live:
                 model_type = exp_config['type']
                 model_params = exp_config['params']
                 
                 live.log_params(model_params)
                 
+                # --- NEW: Start CodeCarbon Tracker ---
+                logger.info(f"Starting CodeCarbon tracker for {exp_name}...")
+                tracker = EmissionsTracker(
+                    project_name=f"train_{exp_name}",
+                    output_dir=dvclive_dir,  # Save emissions.csv in the dvclive dir
+                    log_level="warning"      # Suppress verbose logs
+                )
+                tracker.start()
+                # -------------------------------------
+
                 logger.info(f"Training {model_type}...")
                 model = get_model(model_type, model_params)
+                
+                # This is the line we are tracking
                 model.fit(X_train_scaled, y_train)
+                
+                # --- NEW: Stop CodeCarbon Tracker ---
+                emissions_data_kg = tracker.stop()
+                emissions_data_grams = emissions_data_kg * 1000
+                logger.info(f"Stopped tracker. Emissions for {exp_name}: {emissions_data_grams:.4f} gCO2")
+                # ------------------------------------
                 
                 logger.info("Evaluating model...")
                 y_pred = model.predict(X_test_scaled)
                 metrics = evaluate_model(y_test, y_pred, p=X_test.shape[1])
+                
+                # --- NEW: Log emissions to DVCLive metrics ---
+                # We log in grams for better readability
+                live.log_metric("co2_emissions_grams", round(emissions_data_grams, 6))
+                # ---------------------------------------------
                 
                 for metric_name, value in metrics.items():
                     live.log_metric(metric_name, value)
@@ -122,6 +156,7 @@ def train(config_path: str):
                 with open(model_path, 'wb') as f:
                     pickle.dump(model, f)
                 logger.info(f"Model saved to {model_path}")
+            # --- End of DVCLive block ---
         
         logger.info("All experiments complete.")
 
