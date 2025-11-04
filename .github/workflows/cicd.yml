@@ -54,7 +54,7 @@ jobs:
           # Pull the raw data to start the pipeline
           dvc pull data/raw/global-data-on-sustainable-energy.csv.dvc -r mlops_remote
           # Pull the existing model to compare against (for select_best_model.py)
-          dvc pull model/model.pkl.dvc -r mlops_remote --force
+          dvc pull model/model.pkl -r mlops_remote --force
           
       - name: Reproduce the full pipeline
         run: |
