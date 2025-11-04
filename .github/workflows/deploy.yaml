@@ -3,7 +3,7 @@ name: CD - Build and Deploy to EC2
 on:
   # --- TRIGGER 1: Runs after the CI (training) pipeline succeeds ---
   workflow_run:
-    workflows: ["CI - Train and Version Model"] # <-- Match the new name
+    workflows: ["CI - Train and Version Model"] 
     types:
       - completed
       
@@ -16,13 +16,12 @@ on:
       - 'Dockerfile'
       - '.dockerignore'
       - 'requirements.txt'
-      - 'templates/**'
+      - 'templates/**' # <-- ADD THIS to deploy.yaml
+      - 'static/**'  # <-- ADD THIS to deploy.yaml
 
 jobs:
   build-and-deploy:
-    # --- NEW: This job now runs if EITHER trigger fires successfully ---
-    # 1. Runs if CI pipeline (workflow_run) was successful
-    # 2. Runs if the event was a 'push' (for app code) AND it wasn't a bot commit
+    # --- This job now runs if EITHER trigger fires successfully ---
     if: |
       (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success') ||
       (github.event_name == 'push' && !contains(github.event.head_commit.message, '[Auto]'))
@@ -36,11 +35,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      # ... (rest of the setup steps are fine) ...
+
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-secret-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Set up Python
@@ -57,10 +58,6 @@ jobs:
 
       - name: Pull artifacts from DVC
         run: |
-          # This is the key step:
-          # If triggered by CI, this pulls the NEW model.
-          # If triggered by App Push, this pulls the CURRENT model.
-          # Either way, it gets the correct versioned model.
           dvc pull -r mlops_remote --force
           
       - name: Build Docker image
@@ -80,7 +77,7 @@ jobs:
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }} # <-- Make sure this secret is EC2_USER
+          username: ${{ secrets.EC2_USER }} 
           key: ${{ secrets.EC2_KEY }}
           port: 22
           script: |
@@ -98,10 +95,19 @@ jobs:
             fi
             # --- END: Swap space ---
 
+            # --- THIS IS THE FIX ---
+            echo "Cleaning up Docker to free space..."
+            sudo docker system prune -af
+            # ---------------------
+            
             # Set variables
             S3_PATH="s3://${{ secrets.AWS_S3_BUCKET }}/${{ secrets.S3_IMAGE_KEY }}"
             LOCAL_IMAGE_FILE="$HOME/image.tar"
             IMAGE_TAG_TO_RUN="${{ env.IMAGE_NAME_AND_TAG }}"
+            
+            echo "Stopping and removing old container (if any)..."
+            sudo docker stop ml-api-container || true
+            sudo docker rm ml-api-container || true
             
             echo "Downloading new image from $S3_PATH to $LOCAL_IMAGE_FILE"
             aws s3 cp $S3_PATH $LOCAL_IMAGE_FILE --region ${{ secrets.AWS_REGION }}
@@ -109,12 +115,19 @@ jobs:
             echo "Loading image into Docker"
             sudo docker load -i $LOCAL_IMAGE_FILE
             
-            echo "Stopping and removing old container..."
-            sudo docker stop ml-api-container || true
-            sudo docker rm ml-api-container || true
-            
             echo "Running new container..."
             sudo docker run -d --name ml-api-container --restart always -p 80:5000 $IMAGE_TAG_TO_RUN
             
             echo "Cleaning up local tar file"
             rm $LOCAL_IMAGE_FILE
+
+            # --- DEBUGGING STEPS ---
+            echo "Waiting 5 seconds for container to start..."
+            sleep 5
+            
+            echo "Current running containers:"
+            sudo docker ps -a
+            
+            echo "Logs from ml-api-container:"
+            sudo docker logs ml-api-container
+
