@@ -13,6 +13,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy only the necessary files for the app to run
 # We explicitly copy *only* what's needed for inference
 COPY app.py .
+COPY templates /app/templates/
 COPY params.yaml .
 COPY model /app/model/
 COPY artifacts /app/artifacts/

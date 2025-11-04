@@ -65,7 +65,7 @@ jobs:
           
       - name: Build Docker image
         run: |
-          docker build -t $IMAGE_NAME_AND_TAG .
+          docker build --no-cache -t $IMAGE_NAME_AND_TAG .
 
       - name: Save Docker image to a tar file
         run: |
