@@ -117,7 +117,7 @@ def train(config_path: str):
                 live.log_params(model_params)
                 
                 # --- NEW: Start CodeCarbon Tracker ---
-                logger.info(f"Starting CodeCarbon tracker for {exp_name}...")
+                logger.info(f"Starting CodeCarbon tracker for {exp_name}..")
                 tracker = EmissionsTracker(
                     project_name=f"train_{exp_name}",
                     output_dir=dvclive_dir,  # Save emissions.csv in the dvclive dir
