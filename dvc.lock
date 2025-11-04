@@ -103,8 +103,8 @@ stages:
       size: 2001
     - path: src/train.py
       hash: md5
-      md5: bc65cd40ea96e8c78f84cbb937398f8b
-      size: 4976
+      md5: 3e0720ad489fc93bf8399dd0378412a6
+      size: 6586
     outs:
     - path: artifacts/scaler.pkl
       hash: md5
@@ -117,9 +117,9 @@ stages:
       nfiles: 3
     - path: reports_exp
       hash: md5
-      md5: 5b26e29bed7f84073b250aa7d6705a8c.dir
-      size: 1095
-      nfiles: 21
+      md5: 83a515843a1e9f27c0d4a70cf6ac2ed6.dir
+      size: 3814
+      nfiles: 27
   select_best:
     cmd: python src/select_best_model.py --config params.yaml
     deps:
@@ -142,19 +142,19 @@ stages:
       size: 2001
     - path: reports_exp
       hash: md5
-      md5: 5b26e29bed7f84073b250aa7d6705a8c.dir
-      size: 1095
-      nfiles: 21
+      md5: 83a515843a1e9f27c0d4a70cf6ac2ed6.dir
+      size: 3814
+      nfiles: 27
     - path: src/select_best_model.py
       hash: md5
-      md5: 25c83499afbd5db939daca1c773c9786
-      size: 6562
+      md5: a48dce21295efb29a3bab27ce525e475
+      size: 8799
     outs:
     - path: model/model.pkl
       hash: md5
-      md5: c6d768f3e9ea97fed59515aa7038ffb9
-      size: 4601347
+      md5: 1cca32f2109976c56509a942bb806327
+      size: 1963
     - path: reports/best_model_summary.json
       hash: md5
-      md5: a229eb66af7b4ea4c2804122bcde6c12
-      size: 209
+      md5: 4d5202de3256d29247777b6d47fe408a
+      size: 237
