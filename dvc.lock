@@ -117,8 +117,8 @@ stages:
       nfiles: 3
     - path: reports_exp
       hash: md5
-      md5: 83a515843a1e9f27c0d4a70cf6ac2ed6.dir
-      size: 3814
+      md5: 9f0d2c6284aeddf9385c6d129e20855f.dir
+      size: 3817
       nfiles: 27
   select_best:
     cmd: python src/select_best_model.py --config params.yaml
@@ -142,8 +142,8 @@ stages:
       size: 2001
     - path: reports_exp
       hash: md5
-      md5: 83a515843a1e9f27c0d4a70cf6ac2ed6.dir
-      size: 3814
+      md5: 9f0d2c6284aeddf9385c6d129e20855f.dir
+      size: 3817
       nfiles: 27
     - path: src/select_best_model.py
       hash: md5
@@ -156,5 +156,5 @@ stages:
       size: 1963
     - path: reports/best_model_summary.json
       hash: md5
-      md5: 4d5202de3256d29247777b6d47fe408a
+      md5: e252ac5cb139f17eebceb3f5fbb07e33
       size: 237
