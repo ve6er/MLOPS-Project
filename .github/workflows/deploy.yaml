@@ -1,16 +1,31 @@
-# .github/workflows/deploy.yaml
-
-name: CD - Build and Deploy to EC2 via S3
+name: CD - Build and Deploy to EC2
 
 on:
+  # --- TRIGGER 1: Runs after the CI (training) pipeline succeeds ---
   workflow_run:
-    workflows: ["MLOps CI/CD Pipeline"]
+    workflows: ["CI - Train and Version Model"] # <-- Match the new name
     types:
       - completed
+      
+  # --- TRIGGER 2: Runs if ONLY the app code changes ---
+  push:
+    branches:
+      - master
+    paths:
+      - 'app.py'
+      - 'Dockerfile'
+      - '.dockerignore'
+      - 'requirements.txt'
 
 jobs:
   build-and-deploy:
-    if: github.event.workflow_run.conclusion == 'success'
+    # --- NEW: This job now runs if EITHER trigger fires successfully ---
+    # 1. Runs if CI pipeline (workflow_run) was successful
+    # 2. Runs if the event was a 'push' (for app code) AND it wasn't a bot commit
+    if: |
+      (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success') ||
+      (github.event_name == 'push' && !contains(github.event.head_commit.message, '[Auto]'))
+    
     runs-on: ubuntu-latest
     
     env:
@@ -30,7 +45,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.11' # Use the same version as your ci-cd.yaml
+          python-version: '3.11'
 
       - name: Install dependencies
         run: |
@@ -41,8 +56,10 @@ jobs:
 
       - name: Pull artifacts from DVC
         run: |
-          # This command pulls all data/models/artifacts from your S3 remote
-          # Use the same remote name as in your ci-cd.yaml
+          # This is the key step:
+          # If triggered by CI, this pulls the NEW model.
+          # If triggered by App Push, this pulls the CURRENT model.
+          # Either way, it gets the correct versioned model.
           dvc pull -r mlops_remote --force
           
       - name: Build Docker image
@@ -62,11 +79,11 @@ jobs:
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
+          username: ${{ secrets.EC2_USER }} # <-- Make sure this secret is EC2_USER
           key: ${{ secrets.EC2_KEY }}
           port: 22
           script: |
-            # --- START: Add swap space to prevent OOM Kill ---
+            # --- START: Swap space (good practice) ---
             if [ -f /swapfile ]; then
               echo "Swap file already exists."
             else
@@ -75,18 +92,17 @@ jobs:
               sudo chmod 600 /swapfile
               sudo mkswap /swapfile
               sudo swapon /swapfile
-              # Make swap permanent
               echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
               echo "Swap file created and enabled."
             fi
-            # --- END: Add swap space ---
+            # --- END: Swap space ---
 
             # Set variables
             S3_PATH="s3://${{ secrets.AWS_S3_BUCKET }}/${{ secrets.S3_IMAGE_KEY }}"
-            LOCAL_IMAGE_FILE="/home/${{ secrets.EC2_USER }}/image.tar"
+            LOCAL_IMAGE_FILE="$HOME/image.tar"
             IMAGE_TAG_TO_RUN="${{ env.IMAGE_NAME_AND_TAG }}"
             
-            echo "Downloading new image from $S3_PATH"
+            echo "Downloading new image from $S3_PATH to $LOCAL_IMAGE_FILE"
             aws s3 cp $S3_PATH $LOCAL_IMAGE_FILE --region ${{ secrets.AWS_REGION }}
             
             echo "Loading image into Docker"
@@ -97,7 +113,6 @@ jobs:
             sudo docker rm ml-api-container || true
             
             echo "Running new container..."
-            # Using port 80 as you configured
             sudo docker run -d --name ml-api-container --restart always -p 80:5000 $IMAGE_TAG_TO_RUN
             
             echo "Cleaning up local tar file"

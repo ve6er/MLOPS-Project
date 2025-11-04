@@ -1,18 +1,31 @@
-name: MLOps CI/CD Pipeline
+name: CI - Train and Version Model
 
 on:
   push:
     branches:
-      - master  # Triggers on push to the main branch
+      - master
+    # --- NEW: This job will ONLY run if these files change ---
+    paths:
+      - 'src/**'
+      - 'data/raw/**'
+      - 'params.yaml'
   pull_request:
     branches:
       - master
+    paths:
+      - 'src/**'
+      - 'data/raw/**'
+      - 'params.yaml'
 
 jobs:
   run-pipeline:
     runs-on: ubuntu-latest
     permissions:
-        contents: write
+      contents: write
+      
+    # --- NEW: This 'if' check prevents the bot from re-triggering itself ---
+    if: "contains(github.event.head_commit.message, '[Auto]') == false"
+    
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -38,13 +51,14 @@ jobs:
 
       - name: Pull DVC Cache
         run: |
-          # Pull only the raw data to start the pipeline
-          # This avoids errors if other stages haven't been run yet
+          # Pull the raw data to start the pipeline
           dvc pull data/raw/global-data-on-sustainable-energy.csv.dvc -r mlops_remote
+          # Pull the existing model to compare against (for select_best_model.py)
+          dvc pull model/model.pkl.dvc -r mlops_remote --force
           
       - name: Reproduce the full pipeline
         run: |
-          # This runs all stages: preprocess, feature_engineering, train, and select_best
+          # This runs all stages and selects the best model
           dvc repro
           
       - name: Show DVC experiments
@@ -58,15 +72,12 @@ jobs:
           
       - name: Commit DVC lock files
         run: |
-          # Configure Git
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
           
-          # Add the updated lock file
           git add dvc.lock
           
-          # Commit only if there are changes
+          # Use a special commit message that our 'if' condition can check
           git commit -m "ci: [Auto] Update dvc.lock with new model/data" || echo "No changes to commit"
           
-          # Push the commit back to your repo
           git push
