@@ -150,7 +150,7 @@ def main():
         logger.debug("successfully completed preprocessing")
 
         #saving the preprocessed data
-        preprocessed_data_path = params['output_path']
+        preprocessed_data_path =  params['output_path']
         imputation_path = params['imputation_path']
         ohe_columns_path = params['ohe_columns_path']
 
