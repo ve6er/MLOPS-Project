@@ -141,11 +141,11 @@ def main():
 
         #drop the unnecessary columns and clean column names along with data types
         df = drop_cols(df)
-        df = fix_types(df) # This function is now fixed
+        df = fix_types(df) 
         logger.debug("dropping columns and modifying data types successful")
 
         #removing null values and removing outliers
-        df = group_values(df) # This function will no longer crash
+        df = group_values(df) # this function will no longer crash
         df, ohe_columns = encode_data(df)
         logger.debug("successfully completed preprocessing")
 
