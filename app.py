@@ -60,7 +60,7 @@ try:
     if len(model_artifacts["ohe_columns"]) != model_features:
         app.logger.warning(f"--- WARNING: Loaded {len(ohe_cols)} columns, but model expects {model_features}. ---")
         
-    app.logger.info ("--- All artifacts loaded successfully ---")
+    app.logger.info("--- All artifacts loaded successfully ---")
 
 except Exception as e:
     app.logger.error(f"--- FATAL ERROR: Failed to load artifacts. {e} ---")
