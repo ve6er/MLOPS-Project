@@ -23,3 +23,7 @@ __pycache__/
 
 .github\workflows\ci-cd.yaml
 .github\workflows\retrain.yaml
+
+/model_plots/
+plot_results.ipynb
+reports.zip
