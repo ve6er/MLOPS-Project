@@ -68,11 +68,11 @@ This workflow is triggered *only* after the CI workflow completes successfully.
 
 Three models were trained and evaluated. The Ridge Regressor provided the best trade-off by a significant margin.
 
-| Model | MSE | RMSE | MAE | R2 Score | Adjusted R2 Score | Carbon Impact |
+| Model | MSE | RMSE | MAE | R2 Score | Adjusted R2 Score | Carbon Emission |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
-| Lasso | 2.464 | 1.570 | 1.181 | 0.397 | 0.184 |  |
-| Ridge | 0.168 | 0.410 | 0.283 | 0.959 | 0.944 |  |
-| Random Forest | 0.078 | 0.279 | 0.123 | 0.981 | 0.974 |  |
+| Lasso | 2.464 | 1.570 | 1.181 | 0.397 | 0.184 | 0.000015 |
+| Ridge | 0.168 | 0.410 | 0.283 | 0.959 | 0.944 | 0.003431 |
+| Random Forest | 0.078 | 0.279 | 0.123 | 0.981 | 0.974 | 0.015297 |
 
 *Table 1: Evaluation of all models*
 
