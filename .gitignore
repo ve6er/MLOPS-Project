@@ -27,3 +27,4 @@ __pycache__/
 /model_plots/
 plot_results.ipynb
 reports.zip
+ridge-regression-predict-renewable-energy.ipynb
