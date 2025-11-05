@@ -9,49 +9,48 @@ feature_engineering:
   output_path: data/features/featured_data.csv
   boxcox_lambda_path: artifacts/boxcox_lambdas.json
   cols_to_transform:
-    - 'Electricity from fossil fuels (TWh)'
-    - 'Electricity from nuclear (TWh)'
-    - 'Electricity from renewables (TWh)'
-    - 'Financial flows to developing countries (US $)'
-    - 'Primary energy consumption per capita (kWh/person)'
-    - 'Renewable-electricity-generating-capacity-per-capita'
-    - 'Renewables (% equivalent primary energy)'
-    - 'Value_co2_emissions_kt_by_country'
-    - 'gdp_growth'
-    - 'gdp_per_capita'
-
+  - Electricity from fossil fuels (TWh)
+  - Electricity from nuclear (TWh)
+  - Electricity from renewables (TWh)
+  - Financial flows to developing countries (US $)
+  - Primary energy consumption per capita (kWh/person)
+  - Renewable-electricity-generating-capacity-per-capita
+  - Renewables (% equivalent primary energy)
+  - Value_co2_emissions_kt_by_country
+  - gdp_growth
+  - gdp_per_capita
 data_split:
   train_path: data/processed/train.csv
   test_path: data/processed/test.csv
   test_size: 0.2
   random_state: 42
-  target_col: 'Renewables (% equivalent primary energy)' # This was missing, I'm guessing based on your code
+  target_col: Renewables (% equivalent primary energy)   # This was missing, I'm guessing based on your code
 
 train:
   models_dir: models_exp # Directory to save all experimental models
   reports_dir: reports_exp # Directory for DVCLive to save metrics
   scaler_path: artifacts/scaler.pkl
-  
+
   # Define the metric to find the best model
-  primary_metric: 'r2_score' 
-  metric_goal: 'maximize' # 'maximize' or 'minimize'
+  primary_metric: r2_score
+  metric_goal: maximize   # 'maximize' or 'minimize'
 
   # Define all models to experiment with
   experiments:
     ridge:
-      type: 'Ridge'
+      type: Ridge
+      params:
+        alpha: 1
+
+    lasso:
+      type: Lasso
       params:
         alpha: 1.0
-    
-    lasso:
-      type: 'Lasso'
-      params:
-        alpha: 0.5
-        
+
     random_forest:
-      type: 'RandomForestRegressor'
+      type: RandomForestRegressor
       params:
-        n_estimators: 100
+        n_estimators: 75
         max_depth: 10
         random_state: 42
 
