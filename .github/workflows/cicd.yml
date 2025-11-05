@@ -85,7 +85,7 @@ jobs:
           # Commit. If it fails (because no changes), then run `git reset`
           # This unstages dvc.lock, cleaning the working tree.
           git commit -m "ci: [Auto] Update dvc.lock with new model/data" || git reset
-
+          git stash
           # Now the staging area is clean and this command will work
           git pull --rebase
           
