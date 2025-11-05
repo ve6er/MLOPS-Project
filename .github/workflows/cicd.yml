@@ -81,11 +81,12 @@ jobs:
           
           git add dvc.lock
           
-          # Commit only if there are changes
-          git commit -m "ci: [Auto] Update dvc.lock with new model/data" || echo "No changes to commit"
+          # --- THIS IS THE FIX ---
+          # Commit. If it fails (because no changes), then run `git reset`
+          # This unstages dvc.lock, cleaning the working tree.
+          git commit -m "ci: [Auto] Update dvc.lock with new model/data" || git reset
 
-          # FIX 3: Pull with rebase before pushing
-          # This solves the "race condition" and the '[rejected]' error
+          # Now the staging area is clean and this command will work
           git pull --rebase
           
           # Now the push will succeed
